@@ -1,4 +1,5 @@
 var entree
+var cooldownclic = 0;
 
 class Menu extends Phaser.Scene{
     constructor(){
@@ -22,6 +23,12 @@ class Menu extends Phaser.Scene{
         if (passer){
             this.scene.start("scenelevel")
         }
+        this.input.on('pointerdown', function (pointer) {
+            if (this.input.manager.activePointer.isDown && cooldownclic == 0){
+                this.scene.start("scenelevel")
+                cooldownclic = 1
+            }  
+        }, this);
     }
 
 }
