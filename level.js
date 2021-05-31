@@ -154,7 +154,7 @@ class Level extends Phaser.Scene{
         boutonpot = this.input.keyboard.addKeys('E');
 
         /*Création Sprites*/
-        player = this.physics.add.sprite(4800, 300, 'perso');
+        player = this.physics.add.sprite(500, 300, 'perso');
         player.setGravity(0, 1000);
 
         ennemiGD = this.physics.add.sprite(874, 300, 'ennemiGD');

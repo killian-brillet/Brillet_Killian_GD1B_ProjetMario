@@ -3,6 +3,7 @@ var jouer
 var tutoriel
 var quitter
 var choixcontrole
+var etpa
 
 var controlechoisi = 1
 
@@ -18,6 +19,7 @@ class Menu extends Phaser.Scene{
 
     preload(){
         this.load.image('fondmenu', 'assets_alpha/fondmenu.png');
+        this.load.image('etpa', 'assets_alpha/etpa.png');
         this.load.spritesheet('jouer', 'assets_alpha/jouer.png', { frameWidth: 250, frameHeight: 110 });
         this.load.spritesheet('tutoriel', 'assets_alpha/tutoriel.png', { frameWidth: 265, frameHeight: 90 });
         this.load.spritesheet('quitter', 'assets_alpha/quitter.png', { frameWidth: 232, frameHeight: 90 });
@@ -33,6 +35,9 @@ class Menu extends Phaser.Scene{
         tutoriel = this.add.sprite(575,238,'tutoriel').setInteractive({ cursor: 'pointer' })
         quitter = this.add.sprite(620,380,'quitter').setInteractive({ cursor: 'pointer' })
         choixcontrole = this.add.sprite(80, 370,'ordi').setInteractive({ cursor: 'pointer' })
+
+        etpa = this.add.sprite(850,400,'etpa')
+        etpa.setScale(0.15)
 
         this.anims.create({
             key: 'jouer',
@@ -157,25 +162,53 @@ class Menu extends Phaser.Scene{
         }, this);
 
 
+        if (controlechoisi == 1){
+            choixcontrole.on('pointerover', function (event) {
+                choixcontrole.anims.play('ordi',true);
+            });
 
+            choixcontrole.on('pointerout', function (event) {
+                choixcontrole.anims.play('ordiglow',true);
+            });
 
-        choixcontrole.on('pointerover', function (event) {
+            choixcontrole.on('pointerdown', function(){
+                choixcontrole.anims.play('portable',true);
+                controlechoisi = 2
+            });
+        }
 
-            if (choixcontrole == 1){
+        else if (controlechoisi == 2){
+            choixcontrole.on('pointerover', function (event) {
+                choixcontrole.anims.play('portable',true);
+            });
+
+            choixcontrole.on('pointerout', function (event) {
+                choixcontrole.anims.play('portableglow',true);
+            });
+
+            choixcontrole.on('pointerdown', function(){
+                choixcontrole.anims.play('ordi',true);
+                controlechoisi = 1
+            });
+        }
+
+        /*choixcontrole.on('pointerover', function (event) {
+
+            if (controlechoisi == 1){
                 choixcontrole.anims.play('ordi',true);
             }
-            else if (choixcontrole == 2){
+            else if (controlechoisi == 2){
                 choixcontrole.anims.play('portable',true);
             }
-
+                
         });
 
         choixcontrole.on('pointerout', function (event) {
 
-            if (choixcontrole == 1){
+            if (controlechoisi == 1){
                 choixcontrole.anims.play('ordiglow',true);
             }
-            else if (choixcontrole == 2){
+            else if (controlechoisi == 2){
                 choixcontrole.anims.play('portableglow',true);
             }
 
@@ -183,14 +216,17 @@ class Menu extends Phaser.Scene{
 
         choixcontrole.on('pointerdown', function(){
 
-            if(choixcontrole == 1){
-                choixcontrole = 2
+            if (controlechoisi == 1){
+                choixcontrole.anims.play('portableglow',true);
+                controlechoisi = 2
             }
-            if(choixcontrole == 1){
-                choixcontrole = 1
+            else if (controlechoisi == 2){
+                choixcontrole.anims.play('ordiglow',true);
+                controlechoisi = 1
             }
 
-        }, this);
+        }, this);*/
+    }
 
         /*const passer = Phaser.Input.Keyboard.JustDown(entree.enter);
         if (passer){
@@ -205,4 +241,3 @@ class Menu extends Phaser.Scene{
         */
     }
 
-}
