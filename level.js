@@ -60,6 +60,7 @@ var cooldown = false;
 
 var afficheVie;
 var afficheMana;
+var afficheCooldown;
 
 var fond;
 var parallax1;
@@ -75,12 +76,13 @@ class Level extends Phaser.Scene{
     preload(){
 
         /*Divers*/
-        this.load.image('fondlevel', 'assets_alpha/fondlevel.png');
+        this.load.image('ciel', 'assets_alpha/ciel.png');
         this.load.image('parallax', 'assets_alpha/parallax1.png');
         this.load.image('parallax2', 'assets_alpha/parallax2.png');
         this.load.image('assetblocs', 'assets_alpha/blocs.png');
         this.load.image('plateforme', 'assets_alpha/plateforme.png');
         this.load.image('balle', 'assets_alpha/balle.png');
+        this.load.image('balleennemi', 'assets_alpha/balleennemi.png');
         this.load.image('potion', 'assets_alpha/potion.png');
         this.load.image('rouages', 'assets_alpha/objet.png');
 
@@ -105,6 +107,12 @@ class Level extends Phaser.Scene{
 
         this.load.image('interface0_0', 'assets_alpha/interface_0_0.png');
 
+        this.load.image('cooldown3', 'assets_alpha/cooldown3.png');
+        this.load.image('cooldown2', 'assets_alpha/cooldown2.png');
+        this.load.image('cooldown1', 'assets_alpha/cooldown1.png');
+        this.load.image('cooldown0', 'assets_alpha/cooldown0.png');
+
+
         /*Tilemap*/
         this.load.tilemapTiledJSON('cartealpha', 'Tiled/CarteAlpha.json');
 
@@ -113,14 +121,14 @@ class Level extends Phaser.Scene{
         this.load.spritesheet('ennemi', 'assets_alpha/Kikai.png', { frameWidth: 62, frameHeight: 82 });
         this.load.spritesheet('ennemiGD', 'assets_alpha/ennemiGD.png', { frameWidth: 50, frameHeight: 50 });
         this.load.spritesheet('ennemivol', 'assets_alpha/drone.png', { frameWidth: 38, frameHeight: 26 });
-        this.load.spritesheet('boss', 'assets_alpha/BOSS.png', { frameWidth: 500, frameHeight: 333 });
+        this.load.spritesheet('boss', 'assets_alpha/BOSS.png', { frameWidth: 600, frameHeight: 400 });
         this.load.image('tourelle', 'assets_alpha/tourelle.png');
         
     }
 
     create(){
         /*Création de fond*/
-        fond = this.add.image(448, 224, 'fondlevel')
+        fond = this.add.image(448, 224, 'ciel')
         fond.setScrollFactor(0)
         parallax2 = this.add.image(2000,224,'parallax2')
         parallax2.setScrollFactor(0.5)
@@ -146,21 +154,22 @@ class Level extends Phaser.Scene{
         boutonpot = this.input.keyboard.addKeys('E');
 
         /*Création Sprites*/
-        player = this.physics.add.sprite(4700, 300, 'perso');
+        player = this.physics.add.sprite(4800, 300, 'perso');
         player.setGravity(0, 1000);
 
-        ennemiGD = this.physics.add.sprite(1000, 300, 'ennemiGD');
+        ennemiGD = this.physics.add.sprite(874, 300, 'ennemiGD');
         ennemiGD.setGravity(0, 1000);
 
-        ennemiVol = this.physics.add.sprite(800, 200, 'ennemivol');
+        ennemiVol = this.physics.add.sprite(1824, 100, 'ennemivol');
         ennemiVol.setScale(1.5);
 
-        tourelle = this.physics.add.sprite(2478,200, 'tourelle');
+        tourelle = this.physics.add.sprite(2944 ,200, 'tourelle');
         tourelleexist = true;
         tourelle.setScale(1.2);
-        tourelle.setGravity(0, 1000);
+        tourelle.setFlipY(true);
+        tourelle.setGravity(0, -1000);
 
-        boss = this.physics.add.sprite(5200, 200, 'boss');
+        boss = this.physics.add.sprite(5600, 100, 'boss');
         boss.setImmovable(true)
         boss.setGravity(0,1000)
 
@@ -327,69 +336,81 @@ class Level extends Phaser.Scene{
 
         /*Ennemis classiques*/
 
-        if (ennemiGD.x <= 700)
+        if (ennemiGD.x <= 632)
         {
             ennemiGD.setVelocityX(100);
             ennemiGD.setFlipX(true);
         }
 
-        if (ennemiGD.x >= 1000)
+        else if (ennemiGD.x >= 874)
         {
             ennemiGD.setVelocityX(-100);     
             ennemiGD.setFlipX(false);
         }
 
+        
+        if (ennemiVol.x <= 1376)
+        {
+            ennemiVol.setVelocityX(200);     
+            ennemiVol.setFlipX(false);
+        }
+
+        else if (ennemiVol.x >= 1824)
+        {
+            ennemiVol.setVelocityX(-200);     
+            ennemiVol.setFlipX(false);
+        }
+
+
+        /*Tourelle*/
         if (timertourelle == 500 && tourelleexist == true){
-            balletourelle = balleennemi.create(tourelle.x, tourelle.y-15, 'balle')
+            balletourelle = balleennemi.create(tourelle.x, tourelle.y-15, 'balleennemi')
             this.physics.moveTo(balletourelle, player.x, player.y, 500);
             timertourelle = 0
         }
 
         /*Boss*/
 
-        if (timerinvuboss == 1500 && invuboss == true){
+        if(player.x >= 4900){
+            this.cameras.main.pan(5400, 0, 3000, 'Power2');
+            player.setCollideWorldBounds(true);
+        }
+
+        if (timerinvuboss == 1000 && invuboss == true){
             boss.anims.play('bossvulné', true);
             invuboss = false;
             timerinvuboss = 0
         }
-        if (timerinvuboss == 400 && invuboss == false){
+        if (timerinvuboss == 200 && invuboss == false){
             boss.anims.play('bossinvu', true);
             invuboss = true;
             timerinvuboss = 0
         }
 
-        if (timerboss == 600 && bossexist == true && compteurmeca <= 2){
-            console.log(compteurmeca)
-            balleboss = balleennemi.create(boss.x-250, boss.y, 'balle')
+        if (timerboss == 300 && bossexist == true && compteurmeca <= 2){
+            balleboss = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
             balleboss.setFlipX(true)
             balleboss.setScale(1.5)
             this.physics.moveTo(balleboss, player.x, player.y, 500);
             compteurmeca++
             timerboss = 0
         }
-        else if (timerboss == 600 && bossexist == true && compteurmeca == 3){
-            console.log(compteurmeca)
-            balleboss = balleennemi.create(boss.x-250, boss.y, 'balle')
-            balleboss2 = balleennemi.create(boss.x-250, boss.y, 'balle')
-            balleboss3 = balleennemi.create(boss.x-250, boss.y, 'balle')
+        else if (timerboss == 300 && bossexist == true && compteurmeca == 3){
+            balleboss = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
+            balleboss2 = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
+            balleboss3 = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
             balleboss.setFlipX(true)
             balleboss.setScale(1.5)
-            balleboss.setVelocity(-400, -55);
+            balleboss.setVelocity(-400,-50);
             balleboss2.setFlipX(true)
             balleboss2.setScale(1.5)
-            balleboss2.setVelocity(-400, 0);
+            balleboss2.setVelocity(-400, 50);
             balleboss3.setFlipX(true)
             balleboss3.setScale(1.5)
-            balleboss3.setVelocity(-400, 55);
-            compteurmeca++
+            balleboss3.setVelocity(-400, 150);
+            compteurmeca=1;
             timerboss = 0
         }
-        /*else if (timerboss == 600 && bossexist == true && compteurmeca == 4){
-            console.log(compteurmeca)
-            laserboss
-            compteurmeca = 1
-            timerboss = 0
-        }*/
 
         /*Potion*/
         if (boutonpot.E.isDown && comptPot == 1)
@@ -449,7 +470,7 @@ class Level extends Phaser.Scene{
 
         if (etatsort == true){
             timersort++
-            if (timersort == 500){
+            if (timersort == 180){
                 timersort = 0
                 etatsort = false
             }
@@ -527,6 +548,23 @@ class Level extends Phaser.Scene{
         else {
             this.afficheMana = this.add.image(160,50, 'interface0_0')
             this.afficheMana.setScrollFactor(0);
+        }
+
+        if (timersort == 1){
+            this.afficheCooldown = this.add.image(100,100, 'cooldown0')
+            this.afficheCooldown.setScrollFactor(0);
+        }
+        else if (timersort == 60){
+            this.afficheCooldown = this.add.image(100,100, 'cooldown1')
+            this.afficheCooldown.setScrollFactor(0);
+        }
+        else if (timersort == 120){
+            this.afficheCooldown = this.add.image(100,100, 'cooldown2')
+            this.afficheCooldown.setScrollFactor(0);
+        }
+        else if (timersort == 0){
+            this.afficheCooldown = this.add.image(100,100, 'cooldown3')
+            this.afficheCooldown.setScrollFactor(0);
         }
     }
 }
