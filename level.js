@@ -24,9 +24,6 @@ var vieboss = 3;
 var timerinvuboss = 0;
 var invuboss = true;
 
-var laseractif = false;
-var timerlaser = 0;
-
 var balleboss;
 var balleboss2;
 var balleboss3;
@@ -55,12 +52,20 @@ var vie;
 var inv = false;
 var timer = 0;
 
+var cle1
+var cle2
+var cle3
+var porte
+var compteurcle = 0
+var porteouverte = false
+
 var timerclic = 0;
 var cooldown = false;
 
 var afficheVie;
 var afficheMana;
 var afficheCooldown;
+var afficheCle;
 
 var fond;
 var parallax1;
@@ -76,15 +81,16 @@ class Level extends Phaser.Scene{
     preload(){
 
         /*Divers*/
-        this.load.image('ciel', 'assets_alpha/ciel.png');
+        this.load.image('fond', 'assets_alpha/fond.png');
         this.load.image('parallax', 'assets_alpha/parallax1.png');
         this.load.image('parallax2', 'assets_alpha/parallax2.png');
         this.load.image('assetblocs', 'assets_alpha/blocs.png');
         this.load.image('plateforme', 'assets_alpha/plateforme.png');
+        this.load.image('porte', 'assets_alpha/porte.png');
+        this.load.image('rouage', 'assets_alpha/rouage.png');
         this.load.image('balle', 'assets_alpha/balle.png');
         this.load.image('balleennemi', 'assets_alpha/balleennemi.png');
         this.load.image('potion', 'assets_alpha/potion.png');
-        this.load.image('rouages', 'assets_alpha/objet.png');
 
         /*Interface*/
         this.load.image('interface4', 'assets_alpha/interface_4.png');
@@ -107,6 +113,11 @@ class Level extends Phaser.Scene{
 
         this.load.image('interface0_0', 'assets_alpha/interface_0_0.png');
 
+        this.load.image('rouage0', 'assets_alpha/rouage0.png');
+        this.load.image('rouage1', 'assets_alpha/rouage1.png');
+        this.load.image('rouage2', 'assets_alpha/rouage2.png');
+        this.load.image('rouage3', 'assets_alpha/rouage3.png');
+
         this.load.image('cooldown3', 'assets_alpha/cooldown3.png');
         this.load.image('cooldown2', 'assets_alpha/cooldown2.png');
         this.load.image('cooldown1', 'assets_alpha/cooldown1.png');
@@ -128,8 +139,7 @@ class Level extends Phaser.Scene{
 
     create(){
         /*Création de fond*/
-        fond = this.add.image(448, 224, 'ciel')
-        fond.setScrollFactor(0)
+        fond = this.add.image(448,224,'fond')
         parallax2 = this.add.image(2000,224,'parallax2')
         parallax2.setScrollFactor(0.5)
         parallax1 = this.add.image(2500,224,'parallax')
@@ -154,7 +164,7 @@ class Level extends Phaser.Scene{
         boutonpot = this.input.keyboard.addKeys('E');
 
         /*Création Sprites*/
-        player = this.physics.add.sprite(500, 300, 'perso');
+        player = this.physics.add.sprite(450, 300, 'perso');
         player.setGravity(0, 1000);
 
         ennemiGD = this.physics.add.sprite(874, 300, 'ennemiGD');
@@ -173,7 +183,17 @@ class Level extends Phaser.Scene{
         boss.setImmovable(true)
         boss.setGravity(0,1000)
 
-        potion = this.physics.add.sprite(448, 200, 'potion');
+        potion = this.physics.add.sprite(3274, 320, 'potion');
+
+        cle1 = this.physics.add.sprite(60, 350, 'rouage');
+        cle2 = this.physics.add.sprite(2124, 100, 'rouage');
+        cle3 = this.physics.add.sprite(4638, 132, 'rouage');
+        cle1.setScale(0.8)
+        cle2.setScale(0.8)
+        cle3.setScale(0.8)
+
+        porte = this.physics.add.sprite(4800, 320, 'porte');
+        porte.setImmovable(true)
 
         ballegroupe = this.physics.add.group();
         balleennemi = this.physics.add.group();
@@ -201,6 +221,12 @@ class Level extends Phaser.Scene{
         this.physics.add.collider(balleennemi, obstacles, destroyBalle, null, this);
 
         this.physics.add.overlap(player, potion, getPotion, null, this);
+        
+        this.physics.add.overlap(player, cle1, getCle, null, this);
+        this.physics.add.overlap(player, cle2, getCle, null, this);
+        this.physics.add.overlap(player, cle3, getCle, null, this);
+
+        this.physics.add.collider(player, porte, ouverturePorte, null, this);
 
         vie = 3
         mana = 4
@@ -280,6 +306,19 @@ class Level extends Phaser.Scene{
             interPot.setScrollFactor(0)
             interPot.setScale(0.7)
             interPot.setDepth(2)
+        }
+
+        function getCle(player, cle1){
+            console.log('Cle')
+            compteurcle++
+            cle1.destroy()
+        }
+
+        function ouverturePorte(player, porte){
+            if (compteurcle == 3){
+                compteurcle++
+                porte.destroy()
+            }
         }
 
         function destroyBalle(ballegroupe, obstacles){
@@ -374,6 +413,7 @@ class Level extends Phaser.Scene{
         if(player.x >= 4900){
             this.cameras.main.pan(5400, 0, 3000, 'Power2');
             player.setCollideWorldBounds(true);
+            mana = 4
         }
 
         if (timerinvuboss == 1000 && invuboss == true){
@@ -483,71 +523,87 @@ class Level extends Phaser.Scene{
             if (mana == 4){
                 this.afficheMana = this.add.image(160,50, 'interface4')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 3){
                 this.afficheMana = this.add.image(160,50, 'interface3')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 2){
                 this.afficheMana = this.add.image(160,50, 'interface2')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 1){
                 this.afficheMana = this.add.image(160,50, 'interface1')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else{
                 this.afficheMana = this.add.image(160,50, 'interface0')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
         }
         else if (vie == 2){
             if (mana == 4){
                 this.afficheMana = this.add.image(160,50, 'interface2_4')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 3){
                 this.afficheMana = this.add.image(160,50, 'interface2_3')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 2){
                 this.afficheMana = this.add.image(160,50, 'interface2_2')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 1){
                 this.afficheMana = this.add.image(160,50, 'interface2_1')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else{
                 this.afficheMana = this.add.image(160,50, 'interface2_0')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
         }
         else if (vie == 1){
             if (mana == 4){
                 this.afficheMana = this.add.image(160,50, 'interface1_4')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 3){
                 this.afficheMana = this.add.image(160,50, 'interface1_3')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 2){
                 this.afficheMana = this.add.image(160,50, 'interface1_2')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else if (mana == 1){
                 this.afficheMana = this.add.image(160,50, 'interface1_1')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
             else{
                 this.afficheMana = this.add.image(160,50, 'interface1_0')
                 this.afficheMana.setScrollFactor(0);
+                this.afficheMana.setDepth(2);
             }
         }
         else {
             this.afficheMana = this.add.image(160,50, 'interface0_0')
             this.afficheMana.setScrollFactor(0);
+            this.afficheMana.setDepth(2);
         }
 
         if (timersort == 1){
@@ -565,6 +621,32 @@ class Level extends Phaser.Scene{
         else if (timersort == 0){
             this.afficheCooldown = this.add.image(100,100, 'cooldown3')
             this.afficheCooldown.setScrollFactor(0);
+        }
+
+        if (compteurcle == 0){
+            this.afficheCle = this.add.image(180,70, 'rouage0')
+            this.afficheCle.setScrollFactor(0);
+            this.afficheCle.setDepth(1);
+        }
+        else if (compteurcle == 1){
+            this.afficheCle = this.add.image(180,70, 'rouage1')
+            this.afficheCle.setScrollFactor(0);
+            this.afficheCle.setDepth(1);
+        }
+        else if (compteurcle == 2){
+            this.afficheCle = this.add.image(180,70, 'rouage2')
+            this.afficheCle.setScrollFactor(0);
+            this.afficheCle.setDepth(1);
+        }
+        else if (compteurcle == 3){
+            this.afficheCle = this.add.image(180,70, 'rouage3')
+            this.afficheCle.setScrollFactor(0);
+            this.afficheCle.setDepth(1);
+        }
+        else if (compteurcle == 4 && porteouverte == false){
+            porteouverte = true
+            this.afficheCle.destroy()
+            console.log('destroy')
         }
     }
 }

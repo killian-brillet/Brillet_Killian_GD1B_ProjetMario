@@ -7,7 +7,8 @@ var etpa
 
 var controlechoisi = 1
 
-var ingame = false;
+var ingame
+var intuto
 
 class Menu extends Phaser.Scene{
     constructor(){
@@ -28,6 +29,8 @@ class Menu extends Phaser.Scene{
     }
 
     create(){
+        ingame = false
+        intuto = false
         entree = entree = this.input.keyboard.addKeys('enter');
         this.add.image(448, 224, 'fondmenu')
 
@@ -134,11 +137,14 @@ class Menu extends Phaser.Scene{
 
         });
 
-        /*jouer.on('pointerdown', function(){
+        tutoriel.on('pointerdown', function(){
 
-            this.scene.start("scenelevel");
+            if (intuto == false){
+                intuto = true
+                this.scene.start("scenetutoriel");
+            }
 
-        }, this);*/
+        }, this);
 
 
 
@@ -157,7 +163,7 @@ class Menu extends Phaser.Scene{
 
         quitter.on('pointerdown', function(){
 
-            return;
+            game.destroy(true, false)
 
         }, this);
 
@@ -192,52 +198,5 @@ class Menu extends Phaser.Scene{
             });
         }
 
-        /*choixcontrole.on('pointerover', function (event) {
-
-            if (controlechoisi == 1){
-                choixcontrole.anims.play('ordi',true);
-            }
-            else if (controlechoisi == 2){
-                choixcontrole.anims.play('portable',true);
-            }
-                
-        });
-
-        choixcontrole.on('pointerout', function (event) {
-
-            if (controlechoisi == 1){
-                choixcontrole.anims.play('ordiglow',true);
-            }
-            else if (controlechoisi == 2){
-                choixcontrole.anims.play('portableglow',true);
-            }
-
-        });
-
-        choixcontrole.on('pointerdown', function(){
-
-            if (controlechoisi == 1){
-                choixcontrole.anims.play('portableglow',true);
-                controlechoisi = 2
-            }
-            else if (controlechoisi == 2){
-                choixcontrole.anims.play('ordiglow',true);
-                controlechoisi = 1
-            }
-
-        }, this);*/
     }
-
-        /*const passer = Phaser.Input.Keyboard.JustDown(entree.enter);
-        if (passer){
-            this.scene.start("scenelevel")
-        }
-        this.input.on('pointerdown', function (pointer) {
-            if (this.input.manager.activePointer.isDown && cooldownclic == 0){
-                this.scene.start("scenelevel")
-                cooldownclic = 1
-            }  
-        }, this);
-        */
-    }
-
+}
