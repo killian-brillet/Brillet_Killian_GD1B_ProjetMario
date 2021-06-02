@@ -23,6 +23,7 @@ var timerboss = 0;
 var vieboss = 3;
 var timerinvuboss = 0;
 var invuboss = true;
+var regenboss
 
 var balleboss;
 var balleboss2;
@@ -81,16 +82,19 @@ class Level extends Phaser.Scene{
     preload(){
 
         /*Divers*/
-        this.load.image('fond', 'assets_alpha/fond.png');
-        this.load.image('parallax', 'assets_alpha/parallax1.png');
-        this.load.image('parallax2', 'assets_alpha/parallax2.png');
+        this.load.image('fond', 'assets_alpha/ciel.png');
+        this.load.image('nuage', 'assets_alpha/NUAGE.png');
+        this.load.image('parallax1', 'assets_alpha/parralax1.png');
+        this.load.image('parallax2', 'assets_alpha/parralax2.png');
         this.load.image('assetblocs', 'assets_alpha/blocs.png');
+        this.load.image('assetfond', 'assets_alpha/tilesfond.png');
         this.load.image('plateforme', 'assets_alpha/plateforme.png');
         this.load.image('porte', 'assets_alpha/porte.png');
         this.load.image('rouage', 'assets_alpha/rouage.png');
-        this.load.image('balle', 'assets_alpha/balle.png');
         this.load.image('balleennemi', 'assets_alpha/balleennemi.png');
         this.load.image('potion', 'assets_alpha/potion.png');
+
+        this.load.spritesheet('balle', 'assets_alpha/balle.png', { frameWidth: 40, frameHeight: 25 });
 
         /*Interface*/
         this.load.image('interface4', 'assets_alpha/interface_4.png');
@@ -139,14 +143,18 @@ class Level extends Phaser.Scene{
 
     create(){
         /*Création de fond*/
+
         fond = this.add.image(448,224,'fond')
-        parallax2 = this.add.image(2000,224,'parallax2')
-        parallax2.setScrollFactor(0.5)
-        parallax1 = this.add.image(2500,224,'parallax')
-        parallax1.setScrollFactor(0.8)
+        fond.setScrollFactor(0)
+        parallax2 = this.add.image(448,224,'parallax2')
+        parallax2.setScrollFactor(0.3)
+        parallax1 = this.add.image(2000,224,'nuage')
+        parallax1.setScrollFactor(0.5)
 
         /*Inititialistion Tilemap*/
         const map = this.make.tilemap({key: 'cartealpha'});
+        const tuilesfond = map.addTilesetImage('tiled_fond','assetfond');
+        const decorfond = map.createLayer('fond', tuilesfond, 0, 0);
         const tuilesobstacles = map.addTilesetImage('blocs','assetblocs');
         const obstacles = map.createLayer('plateformetiled', tuilesobstacles, 0, 0);
         obstacles.setCollisionByExclusion(-1, true);
@@ -160,11 +168,11 @@ class Level extends Phaser.Scene{
         down = this.input.keyboard.addKeys('S');
         left = this.input.keyboard.addKeys('Q');
         right = this.input.keyboard.addKeys('D');
-        boutontir = this.input.keyboard.addKeys('F');
+        boutontir = this.input.keyboard.addKeys('SPACE');
         boutonpot = this.input.keyboard.addKeys('E');
 
         /*Création Sprites*/
-        player = this.physics.add.sprite(450, 300, 'perso');
+        player = this.physics.add.sprite(500, 300, 'perso');
         player.setGravity(0, 1000);
 
         ennemiGD = this.physics.add.sprite(874, 300, 'ennemiGD');
@@ -182,6 +190,7 @@ class Level extends Phaser.Scene{
         boss = this.physics.add.sprite(5600, 100, 'boss');
         boss.setImmovable(true)
         boss.setGravity(0,1000)
+        boss.setScale(0.90)
 
         potion = this.physics.add.sprite(3274, 320, 'potion');
 
@@ -219,6 +228,10 @@ class Level extends Phaser.Scene{
 
         this.physics.add.collider(ballegroupe, obstacles, destroyBalle, null, this);
         this.physics.add.collider(balleennemi, obstacles, destroyBalle, null, this);
+        this.physics.add.collider(porte, ballegroupe, destroyBallePorte, null, this);
+        this.physics.add.collider(porte, balleennemi, destroyBallePorte, null, this);
+        this.physics.add.collider(ballegroupe, plateforme, destroyBalle, null, this);
+        this.physics.add.collider(balleennemi, plateforme, destroyBalle, null, this);
 
         this.physics.add.overlap(player, potion, getPotion, null, this);
         
@@ -231,6 +244,7 @@ class Level extends Phaser.Scene{
         vie = 3
         mana = 4
         sensperso = 0
+        regenboss = false
 
         /*Animations*/
 
@@ -243,6 +257,13 @@ class Level extends Phaser.Scene{
             key: 'bossvulné',
             frames: [ { key: 'boss', frame: 2} ],
             framerate : 10
+        });
+
+        this.anims.create({
+            key: 'balle',
+            frames: this.anims.generateFrameNumbers('balle', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
         });
 
         /*Fonctions*/
@@ -305,11 +326,10 @@ class Level extends Phaser.Scene{
             interPot = this.add.image(287, 50, 'potion')
             interPot.setScrollFactor(0)
             interPot.setScale(0.7)
-            interPot.setDepth(2)
+            interPot.setDepth(3)
         }
 
         function getCle(player, cle1){
-            console.log('Cle')
             compteurcle++
             cle1.destroy()
         }
@@ -322,6 +342,10 @@ class Level extends Phaser.Scene{
         }
 
         function destroyBalle(ballegroupe, obstacles){
+            ballegroupe.destroy();
+        }
+
+        function destroyBallePorte(porte, ballegroupe){
             ballegroupe.destroy();
         }
 
@@ -361,6 +385,12 @@ class Level extends Phaser.Scene{
 
         if (jump && onGround){
                 player.setVelocityY(-600);
+        }
+
+        if (player.y >= 440)
+        {
+            this.physics.pause();
+            this.scene.start("scenemenu")
         }
 
         /*Frame d'invu*/
@@ -413,7 +443,6 @@ class Level extends Phaser.Scene{
         if(player.x >= 4900){
             this.cameras.main.pan(5400, 0, 3000, 'Power2');
             player.setCollideWorldBounds(true);
-            mana = 4
         }
 
         if (timerinvuboss == 1000 && invuboss == true){
@@ -492,10 +521,11 @@ class Level extends Phaser.Scene{
 
         /*Tir Projectile*/
         if (mana >= 1){
-            const tirer = Phaser.Input.Keyboard.JustDown(boutontir.F);
+            const tirer = Phaser.Input.Keyboard.JustDown(boutontir.SPACE);
 
             if (tirer && etatsort == false){
                 balle = ballegroupe.create(player.x, player.y, 'balle')
+                balle.anims.play('balle', true);
                 etatsort = true;
                 if (sensperso == 0){
                     balle.setVelocityX(800);
@@ -646,7 +676,6 @@ class Level extends Phaser.Scene{
         else if (compteurcle == 4 && porteouverte == false){
             porteouverte = true
             this.afficheCle.destroy()
-            console.log('destroy')
         }
     }
 }
