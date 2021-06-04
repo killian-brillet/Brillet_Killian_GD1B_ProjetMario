@@ -146,8 +146,8 @@ class Level extends Phaser.Scene{
 
         fond = this.add.image(448,224,'fond')
         fond.setScrollFactor(0)
-        parallax2 = this.add.image(448,224,'parallax2')
-        parallax2.setScrollFactor(0.3)
+        /*parallax2 = this.add.image(448,224,'parallax2')
+        parallax2.setScrollFactor(0.3)*/
         parallax1 = this.add.image(2000,224,'nuage')
         parallax1.setScrollFactor(0.5)
 
@@ -505,7 +505,7 @@ class Level extends Phaser.Scene{
 
         if (plateformeexist == true){
             timerplateforme++;
-            if (timerplateforme == 800){
+            if (timerplateforme == 400){
                 timerplateforme = 0
                 plateformeexist = false;
                 bloc.destroy()
@@ -514,7 +514,7 @@ class Level extends Phaser.Scene{
 
         if (cooldown == true){
             timerclic++
-            if (timerclic = 180){
+            if (timerclic = 400){
                 cooldown=false;
             }
         }
@@ -637,19 +637,19 @@ class Level extends Phaser.Scene{
         }
 
         if (timersort == 1){
-            this.afficheCooldown = this.add.image(100,100, 'cooldown0')
+            this.afficheCooldown = this.add.image(330,51, 'cooldown0')
             this.afficheCooldown.setScrollFactor(0);
         }
         else if (timersort == 60){
-            this.afficheCooldown = this.add.image(100,100, 'cooldown1')
+            this.afficheCooldown = this.add.image(330,51, 'cooldown1')
             this.afficheCooldown.setScrollFactor(0);
         }
         else if (timersort == 120){
-            this.afficheCooldown = this.add.image(100,100, 'cooldown2')
+            this.afficheCooldown = this.add.image(330,51, 'cooldown2')
             this.afficheCooldown.setScrollFactor(0);
         }
         else if (timersort == 0){
-            this.afficheCooldown = this.add.image(100,100, 'cooldown3')
+            this.afficheCooldown = this.add.image(330,51, 'cooldown3')
             this.afficheCooldown.setScrollFactor(0);
         }
 
