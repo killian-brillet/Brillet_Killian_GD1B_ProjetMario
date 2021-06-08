@@ -2,6 +2,7 @@ var up;
 var down;
 var left;
 var right;
+var entree;
 
 var player;
 var onGround;
@@ -72,6 +73,8 @@ var fond;
 var parallax1;
 var parallax2;
 
+var dialogue1;
+
 class Level extends Phaser.Scene{
     constructor(){
         super("scenelevel");
@@ -82,62 +85,64 @@ class Level extends Phaser.Scene{
     preload(){
 
         /*Divers*/
-        this.load.image('fond', 'assets_alpha/ciel.png');
-        this.load.image('nuage', 'assets_alpha/NUAGE.png');
-        this.load.image('parallax1', 'assets_alpha/parralax1.png');
-        this.load.image('parallax2', 'assets_alpha/parralax2.png');
-        this.load.image('assetblocs', 'assets_alpha/blocs.png');
-        this.load.image('assetfond', 'assets_alpha/tilesfond.png');
-        this.load.image('plateforme', 'assets_alpha/plateforme.png');
-        this.load.image('porte', 'assets_alpha/porte.png');
-        this.load.image('rouage', 'assets_alpha/rouage.png');
-        this.load.image('balleennemi', 'assets_alpha/balleennemi.png');
-        this.load.image('potion', 'assets_alpha/potion.png');
+        this.load.image('fond', 'assets/ciel.png');
+        this.load.image('nuage', 'assets/NUAGE.png');
+        this.load.image('parallax1', 'assets/parralax1.png');
+        this.load.image('parallax2', 'assets/parralax2.png');
+        this.load.image('assetblocs', 'assets/blocs.png');
+        this.load.image('assetfond', 'assets/tilesfond.png');
+        this.load.image('plateforme', 'assets/plateforme.png');
+        this.load.image('porte', 'assets/porte.png');
+        this.load.image('rouage', 'assets/rouage.png');
+        this.load.image('balleennemi', 'assets/balleennemi.png');
+        this.load.image('potion', 'assets/potion.png');
 
-        this.load.spritesheet('balle', 'assets_alpha/balle.png', { frameWidth: 40, frameHeight: 25 });
+        this.load.image('dialogue1', 'assets/dialogue.png');
+
+        this.load.spritesheet('balle', 'assets/balle.png', { frameWidth: 40, frameHeight: 25 });
 
         /*Interface*/
-        this.load.image('interface4', 'assets_alpha/interface_4.png');
-        this.load.image('interface3', 'assets_alpha/interface_3.png');
-        this.load.image('interface2', 'assets_alpha/interface_2.png');
-        this.load.image('interface1', 'assets_alpha/interface_1.png');
-        this.load.image('interface0', 'assets_alpha/interface_0.png');
+        this.load.image('interface4', 'assets/interface_4.png');
+        this.load.image('interface3', 'assets/interface_3.png');
+        this.load.image('interface2', 'assets/interface_2.png');
+        this.load.image('interface1', 'assets/interface_1.png');
+        this.load.image('interface0', 'assets/interface_0.png');
 
-        this.load.image('interface2_4', 'assets_alpha/interface_2_4.png');
-        this.load.image('interface2_3', 'assets_alpha/interface_2_3.png');
-        this.load.image('interface2_2', 'assets_alpha/interface_2_2.png');
-        this.load.image('interface2_1', 'assets_alpha/interface_2_1.png');
-        this.load.image('interface2_0', 'assets_alpha/interface_2_0.png');
+        this.load.image('interface2_4', 'assets/interface_2_4.png');
+        this.load.image('interface2_3', 'assets/interface_2_3.png');
+        this.load.image('interface2_2', 'assets/interface_2_2.png');
+        this.load.image('interface2_1', 'assets/interface_2_1.png');
+        this.load.image('interface2_0', 'assets/interface_2_0.png');
 
-        this.load.image('interface1_4', 'assets_alpha/interface_1_4.png');
-        this.load.image('interface1_3', 'assets_alpha/interface_1_3.png');
-        this.load.image('interface1_2', 'assets_alpha/interface_1_2.png');
-        this.load.image('interface1_1', 'assets_alpha/interface_1_1.png');
-        this.load.image('interface1_0', 'assets_alpha/interface_1_0.png');
+        this.load.image('interface1_4', 'assets/interface_1_4.png');
+        this.load.image('interface1_3', 'assets/interface_1_3.png');
+        this.load.image('interface1_2', 'assets/interface_1_2.png');
+        this.load.image('interface1_1', 'assets/interface_1_1.png');
+        this.load.image('interface1_0', 'assets/interface_1_0.png');
 
-        this.load.image('interface0_0', 'assets_alpha/interface_0_0.png');
+        this.load.image('interface0_0', 'assets/interface_0_0.png');
 
-        this.load.image('rouage0', 'assets_alpha/rouage0.png');
-        this.load.image('rouage1', 'assets_alpha/rouage1.png');
-        this.load.image('rouage2', 'assets_alpha/rouage2.png');
-        this.load.image('rouage3', 'assets_alpha/rouage3.png');
+        this.load.image('rouage0', 'assets/rouage0.png');
+        this.load.image('rouage1', 'assets/rouage1.png');
+        this.load.image('rouage2', 'assets/rouage2.png');
+        this.load.image('rouage3', 'assets/rouage3.png');
 
-        this.load.image('cooldown3', 'assets_alpha/cooldown3.png');
-        this.load.image('cooldown2', 'assets_alpha/cooldown2.png');
-        this.load.image('cooldown1', 'assets_alpha/cooldown1.png');
-        this.load.image('cooldown0', 'assets_alpha/cooldown0.png');
+        this.load.image('cooldown3', 'assets/cooldown3.png');
+        this.load.image('cooldown2', 'assets/cooldown2.png');
+        this.load.image('cooldown1', 'assets/cooldown1.png');
+        this.load.image('cooldown0', 'assets/cooldown0.png');
 
 
         /*Tilemap*/
         this.load.tilemapTiledJSON('cartealpha', 'Tiled/CarteAlpha.json');
 
         /*Sprites personnages*/
-        this.load.spritesheet('perso', 'assets_alpha/Chi.png', { frameWidth: 60, frameHeight: 60 });
-        this.load.spritesheet('ennemi', 'assets_alpha/Kikai.png', { frameWidth: 62, frameHeight: 82 });
-        this.load.spritesheet('ennemiGD', 'assets_alpha/ennemiGD.png', { frameWidth: 50, frameHeight: 50 });
-        this.load.spritesheet('ennemivol', 'assets_alpha/drone.png', { frameWidth: 38, frameHeight: 26 });
-        this.load.spritesheet('boss', 'assets_alpha/BOSS.png', { frameWidth: 600, frameHeight: 400 });
-        this.load.image('tourelle', 'assets_alpha/tourelle.png');
+        this.load.spritesheet('perso', 'assets/Chi.png', { frameWidth: 60, frameHeight: 60 });
+        this.load.spritesheet('ennemi', 'assets/Kikai.png', { frameWidth: 62, frameHeight: 82 });
+        this.load.spritesheet('ennemiGD', 'assets/ennemiGD.png', { frameWidth: 50, frameHeight: 50 });
+        this.load.spritesheet('ennemivol', 'assets/drone.png', { frameWidth: 38, frameHeight: 26 });
+        this.load.spritesheet('tourelle', 'assets/tourelle.png', { frameWidth: 30, frameHeight: 42 });
+        this.load.spritesheet('boss', 'assets/BOSS.png', { frameWidth: 600, frameHeight: 400 });
         
     }
 
@@ -170,6 +175,7 @@ class Level extends Phaser.Scene{
         right = this.input.keyboard.addKeys('D');
         boutontir = this.input.keyboard.addKeys('SPACE');
         boutonpot = this.input.keyboard.addKeys('E');
+        entree = this.input.keyboard.addKeys('ENTER');
 
         /*Création Sprites*/
         player = this.physics.add.sprite(500, 300, 'perso');
@@ -183,7 +189,7 @@ class Level extends Phaser.Scene{
 
         tourelle = this.physics.add.sprite(2944 ,200, 'tourelle');
         tourelleexist = true;
-        tourelle.setScale(1.2);
+        tourelle.setScale(1.3);
         tourelle.setFlipY(true);
         tourelle.setGravity(0, -1000);
 
@@ -246,6 +252,11 @@ class Level extends Phaser.Scene{
         sensperso = 0
         regenboss = false
 
+        dialogue1 = this.add.image(448,360,'dialogue1')
+        dialogue1.setDepth(10)
+        dialogue1.setScrollFactor(0)
+        this.physics.pause()
+
         /*Animations*/
 
         this.anims.create({
@@ -261,9 +272,46 @@ class Level extends Phaser.Scene{
 
         this.anims.create({
             key: 'balle',
-            frames: this.anims.generateFrameNumbers('balle', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('balle', { start: 0, end: 2 }),
             frameRate: 10,
             repeat: -1
+        });
+
+        this.anims.create({
+            key: 'ennemiGD',
+            frames: this.anims.generateFrameNumbers('ennemiGD', { start: 0, end: 3 }),
+            frameRate: 7,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'drone',
+            frames: this.anims.generateFrameNumbers('ennemivol', { start: 0, end: 12 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'tourelle',
+            frames: this.anims.generateFrameNumbers('tourelle', { start: 0, end: 3 }),
+            frameRate: 5,
+            repeat: 0
+        });
+
+        /* Anims perso */
+
+        this.anims.create({
+            key: 'persoidle',
+            frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'persosort',
+            frames: this.anims.generateFrameNumbers('perso', { start: 3, end: 6 }),
+            frameRate: 5,
+            repeat: 0
         });
 
         /*Fonctions*/
@@ -379,6 +427,7 @@ class Level extends Phaser.Scene{
         else
         {
             player.setVelocityX(0); 
+            /*player.anims.play('persoidle', true)*/
         }
 
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
@@ -408,25 +457,29 @@ class Level extends Phaser.Scene{
         if (ennemiGD.x <= 632)
         {
             ennemiGD.setVelocityX(100);
+            ennemiGD.anims.play('ennemiGD', true)
             ennemiGD.setFlipX(true);
         }
 
         else if (ennemiGD.x >= 874)
         {
-            ennemiGD.setVelocityX(-100);     
+            ennemiGD.setVelocityX(-100); 
+            ennemiGD.anims.play('ennemiGD', true)  
             ennemiGD.setFlipX(false);
         }
 
         
         if (ennemiVol.x <= 1376)
         {
-            ennemiVol.setVelocityX(200);     
+            ennemiVol.setVelocityX(200); 
+            ennemiVol.anims.play('drone', true)    
             ennemiVol.setFlipX(false);
         }
 
         else if (ennemiVol.x >= 1824)
         {
-            ennemiVol.setVelocityX(-200);     
+            ennemiVol.setVelocityX(-200); 
+            ennemiVol.anims.play('drone', true)    
             ennemiVol.setFlipX(false);
         }
 
@@ -436,6 +489,7 @@ class Level extends Phaser.Scene{
             balletourelle = balleennemi.create(tourelle.x, tourelle.y-15, 'balleennemi')
             this.physics.moveTo(balletourelle, player.x, player.y, 500);
             timertourelle = 0
+            tourelle.anims.play('tourelle', true)
         }
 
         /*Boss*/
@@ -524,6 +578,7 @@ class Level extends Phaser.Scene{
             const tirer = Phaser.Input.Keyboard.JustDown(boutontir.SPACE);
 
             if (tirer && etatsort == false){
+                player.anims.play('persosort', true)
                 balle = ballegroupe.create(player.x, player.y, 'balle')
                 balle.anims.play('balle', true);
                 etatsort = true;
@@ -548,6 +603,12 @@ class Level extends Phaser.Scene{
 
 
         /* INTERFACE */
+
+        const passer = Phaser.Input.Keyboard.JustDown(entree.ENTER);
+        if (passer){
+            dialogue1.destroy();
+            this.physics.resume()
+        }
 
         if (vie == 3){
             if (mana == 4){
