@@ -9,6 +9,8 @@ var onGround;
 var gameOver = false;
 
 var ennemiGD;
+var ennemiGD2;
+var ennemiGD3;
 
 var ennemiVol;
 
@@ -180,9 +182,15 @@ class Level extends Phaser.Scene{
         /*Création Sprites*/
         player = this.physics.add.sprite(500, 300, 'perso');
         player.setGravity(0, 1000);
+        player.setSize(30,45)
+        player.setOffset(10,15)
 
         ennemiGD = this.physics.add.sprite(874, 300, 'ennemiGD');
         ennemiGD.setGravity(0, 1000);
+        ennemiGD2 = this.physics.add.sprite(2640, 300, 'ennemiGD');
+        ennemiGD2.setGravity(0, 1000);
+        ennemiGD3 = this.physics.add.sprite(4290, 150, 'ennemiGD');
+        ennemiGD3.setGravity(0, 1000);
 
         ennemiVol = this.physics.add.sprite(1824, 100, 'ennemivol');
         ennemiVol.setScale(1.5);
@@ -218,16 +226,22 @@ class Level extends Phaser.Scene{
         this.physics.add.collider(player, obstacles);
         this.physics.add.collider(boss, obstacles);
         this.physics.add.collider(ennemiGD, obstacles);
+        this.physics.add.collider(ennemiGD2, obstacles);
+        this.physics.add.collider(ennemiGD3, obstacles);
         this.physics.add.collider(tourelle, obstacles);
         this.physics.add.collider(player, plateforme);
 
         /*Colliders Fonctions*/
         this.physics.add.collider(player, boss, hitEnnemi, null, this);
         this.physics.add.overlap(player, ennemiGD, hitEnnemi, null, this);
+        this.physics.add.overlap(player, ennemiGD2, hitEnnemi, null, this);
+        this.physics.add.overlap(player, ennemiGD3, hitEnnemi, null, this);
         this.physics.add.overlap(player, ennemiVol, hitEnnemi, null, this);
 
         this.physics.add.overlap(boss, ballegroupe, tirJoueur, null, this);
         this.physics.add.overlap(ennemiGD, ballegroupe, tirJoueurGD, null, this);
+        this.physics.add.overlap(ennemiGD2, ballegroupe, tirJoueurGD, null, this);
+        this.physics.add.overlap(ennemiGD3, ballegroupe, tirJoueurGD, null, this);
         this.physics.add.overlap(ennemiVol, ballegroupe, tirJoueurVol, null, this);
         this.physics.add.overlap(tourelle, ballegroupe, tirJoueurT, null, this);
         this.physics.add.overlap(player, balleennemi, tirEnnemi, null, this);
@@ -247,15 +261,20 @@ class Level extends Phaser.Scene{
 
         this.physics.add.collider(player, porte, ouverturePorte, null, this);
 
+
+        /*Init Interface*/
+        afficheCooldown = this.add.image(350,51, 'cooldown3')
+
+        /*Init Variables */
         vie = 3
         mana = 4
         sensperso = 0
         regenboss = false
 
-        dialogue1 = this.add.image(448,360,'dialogue1')
+        /*dialogue1 = this.add.image(448,360,'dialogue1')
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
-        this.physics.pause()
+        this.physics.pause()*/
 
         /*Animations*/
 
@@ -414,6 +433,7 @@ class Level extends Phaser.Scene{
         {
             player.setVelocityX(200);
             player.setFlipX(false);
+            player.setOffset(10,15)
             sensperso = 0;
         }
         
@@ -421,6 +441,7 @@ class Level extends Phaser.Scene{
         {
             player.setVelocityX(-200);
             player.setFlipX(true);
+            player.setOffset(20,15)
             sensperso = 1;
         }
     
@@ -468,6 +489,33 @@ class Level extends Phaser.Scene{
             ennemiGD.setFlipX(false);
         }
 
+        if (ennemiGD2.x <= 2306)
+        {
+            ennemiGD2.setVelocityX(100);
+            ennemiGD2.anims.play('ennemiGD', true)
+            ennemiGD2.setFlipX(true);
+        }
+
+        else if (ennemiGD2.x >= 2640)
+        {
+            ennemiGD2.setVelocityX(-100); 
+            ennemiGD2.anims.play('ennemiGD', true)  
+            ennemiGD2.setFlipX(false);
+        }
+
+        if (ennemiGD3.x <= 3938)
+        {
+            ennemiGD3.setVelocityX(100);
+            ennemiGD3.anims.play('ennemiGD', true)
+            ennemiGD3.setFlipX(true);
+        }
+
+        else if (ennemiGD3.x >= 4290)
+        {
+            ennemiGD3.setVelocityX(-100); 
+            ennemiGD3.anims.play('ennemiGD', true)  
+            ennemiGD3.setFlipX(false);
+        }
         
         if (ennemiVol.x <= 1376)
         {
@@ -698,20 +746,24 @@ class Level extends Phaser.Scene{
         }
 
         if (timersort == 1){
-            this.afficheCooldown = this.add.image(330,51, 'cooldown0')
-            this.afficheCooldown.setScrollFactor(0);
+            afficheCooldown.destroy()
+            afficheCooldown = this.add.image(350,51, 'cooldown0')
+            afficheCooldown.setScrollFactor(0);
         }
         else if (timersort == 60){
-            this.afficheCooldown = this.add.image(330,51, 'cooldown1')
-            this.afficheCooldown.setScrollFactor(0);
+            afficheCooldown.destroy()
+            afficheCooldown = this.add.image(350,51, 'cooldown1')
+            afficheCooldown.setScrollFactor(0);
         }
         else if (timersort == 120){
-            this.afficheCooldown = this.add.image(330,51, 'cooldown2')
-            this.afficheCooldown.setScrollFactor(0);
+            afficheCooldown.destroy()
+            afficheCooldown = this.add.image(350,51, 'cooldown2')
+            afficheCooldown.setScrollFactor(0);
         }
         else if (timersort == 0){
-            this.afficheCooldown = this.add.image(330,51, 'cooldown3')
-            this.afficheCooldown.setScrollFactor(0);
+            afficheCooldown.destroy()
+            afficheCooldown = this.add.image(350,51, 'cooldown3')
+            afficheCooldown.setScrollFactor(0);
         }
 
         if (compteurcle == 0){

@@ -4,10 +4,10 @@
   <export target="CarteAlpha.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="blocs" tilewidth="32" tileheight="32" tilecount="30" columns="6">
-  <image source="../assets_alpha/blocs.png" width="192" height="160"/>
+  <image source="../assets/blocs.png" width="192" height="160"/>
  </tileset>
  <tileset firstgid="31" name="tiled_fond" tilewidth="32" tileheight="32" tilecount="6" columns="6">
-  <image source="../assets_alpha/tilesfond.png" width="192" height="32"/>
+  <image source="../assets/tilesfond.png" width="192" height="32"/>
  </tileset>
  <layer id="3" name="fond" width="190" height="14">
   <data encoding="csv">
