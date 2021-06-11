@@ -300,25 +300,30 @@ class Level extends Phaser.Scene{
         afficheCle.setScrollFactor(0);
         afficheCle.setDepth(1);
 
-        porthaut = this.add.image(770,315, 'porthaut')
-        porthaut.setScrollFactor(0)
-        porthaut.setDepth(9);
+        console.log(choixcontrole)
 
-        portgauche = this.add.image(695,390, 'portgauche')
-        portgauche.setScrollFactor(0)
-        portgauche.setDepth(9);
+        if (controlechoisi == 2){
+            console.log('ca rentre')
+            porthaut = this.add.image(770,315, 'porthaut')
+            porthaut.setScrollFactor(0)
+            porthaut.setDepth(9);
 
-        portdroite = this.add.image(845,390, 'portdroite')
-        portdroite.setScrollFactor(0)
-        portdroite.setDepth(9);
+            portgauche = this.add.image(695,390, 'portgauche')
+            portgauche.setScrollFactor(0)
+            portgauche.setDepth(9);
 
-        portprojectile = this.add.image(65,320, 'portproj')
-        portprojectile.setScrollFactor(0)
-        portprojectile.setDepth(9);
+            portdroite = this.add.image(845,390, 'portdroite')
+            portdroite.setScrollFactor(0)
+            portdroite.setDepth(9);
 
-        portpotion = this.add.image(150,380, 'portpot')
-        portpotion.setScrollFactor(0)
-        portpotion.setDepth(9);
+            portprojectile = this.add.image(65,320, 'portproj')
+            portprojectile.setScrollFactor(0)
+            portprojectile.setDepth(9);
+
+            portpotion = this.add.image(150,380, 'portpot')
+            portpotion.setScrollFactor(0)
+            portpotion.setDepth(9);
+        }
 
         /*Init Variables */
         vie = 3
@@ -332,11 +337,11 @@ class Level extends Phaser.Scene{
         porteouverte = false
 
         // Premier dialogue
-        /*dialogue1 = this.add.image(448,360,'dialogue1')
+        dialogue1 = this.add.image(448,360,'dialogue1')
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
         this.physics.pause()
-        etatdialogue = true*/
+        etatdialogue = true
 
         /*Animations*/
 
