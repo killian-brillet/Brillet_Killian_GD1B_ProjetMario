@@ -77,9 +77,19 @@ var parallax1;
 var parallax2;
 
 var dialogue1;
+var etatdialogue;
 
 var menupause;
 var etatpause;
+var reprendre;
+var recommencer;
+var mainmenu;
+
+var porthaut
+var portdroite
+var portgauche
+var portpotion
+var portprojectile
 
 class Level extends Phaser.Scene{
     constructor(){
@@ -138,6 +148,11 @@ class Level extends Phaser.Scene{
 
         this.load.image('pause', 'assets/pause.png');
 
+        this.load.image('porthaut', 'assets/haut.png');
+        this.load.image('portgauche', 'assets/gauche.png');
+        this.load.image('portdroite', 'assets/droite.png');
+        this.load.image('portproj', 'assets/portproj.png');
+        this.load.image('portpot', 'assets/portpot.png');
 
         /*Tilemap*/
         this.load.tilemapTiledJSON('cartealpha', 'Tiled/CarteAlpha.json');
@@ -149,6 +164,12 @@ class Level extends Phaser.Scene{
         this.load.spritesheet('ennemivol', 'assets/drone.png', { frameWidth: 38, frameHeight: 26 });
         this.load.spritesheet('tourelle', 'assets/tourelle.png', { frameWidth: 30, frameHeight: 42 });
         this.load.spritesheet('boss', 'assets/BOSS.png', { frameWidth: 600, frameHeight: 400 });
+
+        // Sprites Interface
+
+        this.load.spritesheet('reprendre', 'assets/reprendre.png', { frameWidth: 225, frameHeight: 50 });
+        this.load.spritesheet('recommencer', 'assets/recommencer.png', { frameWidth: 273, frameHeight: 50 });
+        this.load.spritesheet('mainmenu', 'assets/mainmenu.png', { frameWidth: 160, frameHeight: 50 });
         
     }
 
@@ -185,11 +206,10 @@ class Level extends Phaser.Scene{
         pause = this.input.keyboard.addKeys('ESC')
 
         /*Création Sprites*/
-        player = this.physics.add.sprite(450, 360, 'perso');
+        player = this.physics.add.sprite(450, 350, 'perso');
         player.setGravity(0, 1000);
         player.setSize(30,45)
         player.setOffset(10,25)
-        player.setCollideWorldBounds(true)
 
         ennemiGD = this.physics.add.sprite(874, 300, 'ennemiGD');
         ennemiGD.setGravity(0, 1000);
@@ -280,6 +300,26 @@ class Level extends Phaser.Scene{
         afficheCle.setScrollFactor(0);
         afficheCle.setDepth(1);
 
+        porthaut = this.add.image(770,315, 'porthaut')
+        porthaut.setScrollFactor(0)
+        porthaut.setDepth(9);
+
+        portgauche = this.add.image(695,390, 'portgauche')
+        portgauche.setScrollFactor(0)
+        portgauche.setDepth(9);
+
+        portdroite = this.add.image(845,390, 'portdroite')
+        portdroite.setScrollFactor(0)
+        portdroite.setDepth(9);
+
+        portprojectile = this.add.image(65,320, 'portproj')
+        portprojectile.setScrollFactor(0)
+        portprojectile.setDepth(9);
+
+        portpotion = this.add.image(150,380, 'portpot')
+        portpotion.setScrollFactor(0)
+        portpotion.setDepth(9);
+
         /*Init Variables */
         vie = 3
         mana = 4
@@ -291,10 +331,12 @@ class Level extends Phaser.Scene{
         etatpause = false
         porteouverte = false
 
-        /*dialogue1 = this.add.image(448,360,'dialogue1')
+        // Premier dialogue
+        dialogue1 = this.add.image(448,360,'dialogue1')
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
-        this.physics.pause()*/
+        this.physics.pause()
+        etatdialogue = true
 
         /*Animations*/
 
@@ -365,6 +407,42 @@ class Level extends Phaser.Scene{
             frames: this.anims.generateFrameNumbers('perso', { start: 14, end: 15 }),
             frameRate: 3,
             repeat: 0
+        });
+
+        this.anims.create({
+            key: 'reprendre',
+            frames: [ { key: 'reprendre', frame: 1} ],
+            framerate : 10
+        });
+
+        this.anims.create({
+            key: 'reprendreglow',
+            frames: [ { key: 'reprendre', frame: 2} ],
+            framerate : 10
+        });
+
+        this.anims.create({
+            key: 'recommencer',
+            frames: [ { key: 'recommencer', frame: 1} ],
+            framerate : 10
+        });
+
+        this.anims.create({
+            key: 'recommencerglow',
+            frames: [ { key: 'recommencer', frame: 2} ],
+            framerate : 10
+        });
+
+        this.anims.create({
+            key: 'mainmenu',
+            frames: [ { key: 'mainmenu', frame: 1} ],
+            framerate : 10
+        });
+
+        this.anims.create({
+            key: 'mainmenuglow',
+            frames: [ { key: 'mainmenu', frame: 2} ],
+            framerate : 10
         });
 
         /*Fonctions*/
@@ -463,7 +541,8 @@ class Level extends Phaser.Scene{
         timerinvuboss++
 
         /*Controles joueur*/
-        if (right.D.isDown && etatpause == false)
+
+        if (right.D.isDown && etatpause == false && etatdialogue == false)
         {
             player.setVelocityX(200);
             player.setFlipX(false);
@@ -474,7 +553,7 @@ class Level extends Phaser.Scene{
             sensperso = 0;
         }
         
-        else if (left.Q.isDown && etatpause == false)
+        else if (left.Q.isDown && etatpause == false && etatdialogue == false)
         {
             player.setVelocityX(-200);
             player.setFlipX(true);
@@ -485,10 +564,12 @@ class Level extends Phaser.Scene{
             sensperso = 1;
         }
     
-        else if (onGround)
+        else
         {
-            player.anims.play('persoidle', true)
             player.setVelocityX(0); 
+            if (onGround){
+                player.anims.play('persoidle', true)
+            }
         }
 
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
@@ -515,14 +596,14 @@ class Level extends Phaser.Scene{
 
         /*Ennemis classiques*/
 
-        if (ennemiGD.x <= 632 && etatpause == false)
+        if (ennemiGD.x <= 632 && etatpause == false && etatdialogue == false)
         {
             ennemiGD.setVelocityX(100);
             ennemiGD.anims.play('ennemiGD', true)
             ennemiGD.setFlipX(true);
         }
 
-        else if (ennemiGD.x >= 874 && etatpause == false)
+        else if (ennemiGD.x >= 874 && etatpause == false && etatdialogue == false)
         {
             ennemiGD.setVelocityX(-100); 
             ennemiGD.anims.play('ennemiGD', true)  
@@ -633,12 +714,13 @@ class Level extends Phaser.Scene{
 
         /*Creation plateforme*/
         this.input.on('pointerdown', function (pointer) {
-            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false){
+            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatdialogue == false){
                 player.anims.play('persosort', true)
                 const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
                 bloc = plateforme.create(worldPoint.x, worldPoint.y, 'plateforme')
                 bloc.setScale(1.5)
                 bloc.setImmovable(true);
+                bloc.setDepth(0)
                 cooldown = true;
                 etatsort = true;
                 mana--
@@ -663,7 +745,7 @@ class Level extends Phaser.Scene{
         }
 
         /*Tir Projectile*/
-        if (mana >= 1 && etatpause == false){
+        if (mana >= 1 && etatpause == false && etatdialogue == false){
             const tirer = Phaser.Input.Keyboard.JustDown(boutontir.SPACE);
 
             if (tirer && etatsort == false){
@@ -690,8 +772,9 @@ class Level extends Phaser.Scene{
             }
         }
 
-        /* INTERFACE */
+        // INTERFACE
 
+            // Pause
 
         const echap = Phaser.Input.Keyboard.JustDown(pause.ESC);
 
@@ -701,22 +784,96 @@ class Level extends Phaser.Scene{
                 menupause = this.add.image(448, 224, 'pause')
                 menupause.setScrollFactor(0);
                 menupause.setDepth(5)
+                reprendre = this.add.sprite(448,205,'reprendre').setInteractive({ cursor: 'pointer' })
+                reprendre.setScrollFactor(0);
+                reprendre.setDepth(6)
+                recommencer = this.add.sprite(448,260,'recommencer').setInteractive({ cursor: 'pointer' })
+                recommencer.setScrollFactor(0);
+                recommencer.setDepth(6)
+                mainmenu = this.add.sprite(448,315,'mainmenu').setInteractive({ cursor: 'pointer' })
+                mainmenu.setScrollFactor(0);
+                mainmenu.setDepth(6)
+
                 etatpause = true
+                ennemiGD.anims.play('ennemiGD', false)
+                ennemiGD2.anims.play('ennemiGD', false)
+                ennemiGD3.anims.play('ennemiGD', false)
+                ennemiVol.anims.play('ennemiGD', false)
             }
             else if (etatpause == true){
                 this.physics.resume()
                 menupause.destroy()
+                reprendre.destroy()
+                recommencer.destroy()
+                mainmenu.destroy()
                 etatpause = false
+                ennemiGD.anims.play('ennemiGD', true)
+                ennemiGD2.anims.play('ennemiGD', true)
+                ennemiGD3.anims.play('ennemiGD', true)
+                ennemiVol.anims.play('ennemiGD', true)
             }
         }
+
+        if (etatpause == true){
+            reprendre.on('pointerover', function (event) {
+                reprendre.anims.play('reprendre',true);
+            });
+    
+            reprendre.on('pointerout', function (event) {
+                reprendre.anims.play('reprendreglow',true);
+            });
+    
+            reprendre.on('pointerdown', function(){
+                this.physics.resume()
+                menupause.destroy()
+                reprendre.destroy()
+                recommencer.destroy()
+                mainmenu.destroy()
+                etatpause = false
+                ennemiGD.anims.play('ennemiGD', true)
+                ennemiGD2.anims.play('ennemiGD', true)
+                ennemiGD3.anims.play('ennemiGD', true)
+                ennemiVol.anims.play('ennemiGD', true)
+            }, this);
+
+
+            recommencer.on('pointerover', function (event) {
+                recommencer.anims.play('recommencer',true);
+            });
+    
+            recommencer.on('pointerout', function (event) {
+                recommencer.anims.play('recommencerglow',true);
+            });
+    
+            recommencer.on('pointerdown', function(){
+                this.scene.restart()
+            }, this);
+
+
+            mainmenu.on('pointerover', function (event) {
+                mainmenu.anims.play('mainmenu',true);
+            });
+    
+            mainmenu.on('pointerout', function (event) {
+                mainmenu.anims.play('mainmenuglow',true);
+            });
+    
+            mainmenu.on('pointerdown', function(){
+                this.scene.start("scenemenu");
+            }, this);
+        }
         
+            // Dialogues
 
         const passer = Phaser.Input.Keyboard.JustDown(entree.ENTER);
         if (passer){
+            etatdialogue = false
             dialogue1.destroy();
             this.physics.resume()
         }
 
+    
+            // Interface In game
         if (vie == 3){
             if (mana == 4){
                 afficheMana = this.add.image(160,50, 'interface4')

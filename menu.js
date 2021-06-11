@@ -31,7 +31,6 @@ class Menu extends Phaser.Scene{
     create(){
         ingame = false
         intuto = false
-        entree = entree = this.input.keyboard.addKeys('enter');
         this.add.image(448, 224, 'fondmenu')
 
         jouer = this.add.sprite(565,98,'jouer').setInteractive({ cursor: 'pointer' })
