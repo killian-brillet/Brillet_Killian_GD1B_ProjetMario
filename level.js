@@ -205,6 +205,27 @@ class Level extends Phaser.Scene{
         entree = this.input.keyboard.addKeys('ENTER');
         pause = this.input.keyboard.addKeys('ESC')
 
+        if (controlechoisi == 2){
+            porthaut = this.add.image(770,315, 'porthaut').setInteractive({ cursor: 'pointer' })
+            porthaut.setScrollFactor(0)
+            porthaut.setDepth(9);
+
+            portgauche = this.add.image(695,390, 'portgauche').setInteractive({ cursor: 'pointer' })
+            portgauche.setScrollFactor(0)
+            portgauche.setDepth(9);
+
+            portdroite = this.add.image(845,390, 'portdroite').setInteractive({ cursor: 'pointer' })
+            portdroite.setScrollFactor(0)
+            portdroite.setDepth(9);
+
+            portprojectile = this.add.image(65,320, 'portproj').setInteractive({ cursor: 'pointer' })
+            portprojectile.setScrollFactor(0)
+            portprojectile.setDepth(9);
+
+            portpotion = this.add.image(150,380, 'portpot').setInteractive({ cursor: 'pointer' })
+            portpotion.setScrollFactor(0)
+            portpotion.setDepth(9);
+        }
         /*Création Sprites*/
         player = this.physics.add.sprite(450, 350, 'perso');
         player.setGravity(0, 1000);
@@ -299,31 +320,6 @@ class Level extends Phaser.Scene{
         afficheCle = this.add.image(180,70, 'rouage0')
         afficheCle.setScrollFactor(0);
         afficheCle.setDepth(1);
-
-        console.log(choixcontrole)
-
-        if (controlechoisi == 2){
-            console.log('ca rentre')
-            porthaut = this.add.image(770,315, 'porthaut')
-            porthaut.setScrollFactor(0)
-            porthaut.setDepth(9);
-
-            portgauche = this.add.image(695,390, 'portgauche')
-            portgauche.setScrollFactor(0)
-            portgauche.setDepth(9);
-
-            portdroite = this.add.image(845,390, 'portdroite')
-            portdroite.setScrollFactor(0)
-            portdroite.setDepth(9);
-
-            portprojectile = this.add.image(65,320, 'portproj')
-            portprojectile.setScrollFactor(0)
-            portprojectile.setDepth(9);
-
-            portpotion = this.add.image(150,380, 'portpot')
-            portpotion.setScrollFactor(0)
-            portpotion.setDepth(9);
-        }
 
         /*Init Variables */
         vie = 3
@@ -547,8 +543,7 @@ class Level extends Phaser.Scene{
 
         /*Controles joueur*/
 
-        if (right.D.isDown && etatpause == false && etatdialogue == false)
-        {
+        if (right.D.isDown && etatpause == false && etatdialogue == false && controlechoisi == 1){
             player.setVelocityX(200);
             player.setFlipX(false);
             player.setOffset(10,25)
@@ -558,8 +553,7 @@ class Level extends Phaser.Scene{
             sensperso = 0;
         }
         
-        else if (left.Q.isDown && etatpause == false && etatdialogue == false)
-        {
+        else if (left.Q.isDown && etatpause == false && etatdialogue == false && controlechoisi == 1){
             player.setVelocityX(-200);
             player.setFlipX(true);
             player.setOffset(20,25)
@@ -569,17 +563,43 @@ class Level extends Phaser.Scene{
             sensperso = 1;
         }
     
-        else
-        {
+        else{
             player.setVelocityX(0); 
             if (onGround){
                 player.anims.play('persoidle', true)
             }
         }
 
+        if (controlechoisi == 2){
+            portdroite.on('pointerover', function(){
+                player.setVelocityX(200);
+                player.setFlipX(false);
+                player.setOffset(10,25)
+                if (onGround){
+                    player.anims.play('persomarche', true)
+                }
+                sensperso = 0;
+            });
+
+            portgauche.on('pointerover', function(){
+                player.setVelocityX(-200);
+                player.setFlipX(true);
+                player.setOffset(20,25)
+                if (onGround){
+                    player.anims.play('persomarche', true)
+                }
+                sensperso = 1;
+            });
+
+            porthaut.on('pointerover', function(){
+                player.anims.play('persosaut', true)
+                player.setVelocityY(-600);
+            });
+        }
+
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
 
-        if (jump && onGround && etatpause == false){
+        if (jump && onGround && etatpause == false && controlechoisi == 1){
             player.anims.play('persosaut', true)
             player.setVelocityY(-600);
         }
@@ -710,7 +730,7 @@ class Level extends Phaser.Scene{
         }
 
         /*Potion*/
-        if (boutonpot.E.isDown && comptPot == 1)
+        if (boutonpot.E.isDown && comptPot == 1 && controlechoisi == 1)
         {
             comptPot = 0
             mana = 4;
@@ -750,7 +770,7 @@ class Level extends Phaser.Scene{
         }
 
         /*Tir Projectile*/
-        if (mana >= 1 && etatpause == false && etatdialogue == false){
+        if (mana >= 1 && etatpause == false && etatdialogue == false && controlechoisi == 1){
             const tirer = Phaser.Input.Keyboard.JustDown(boutontir.SPACE);
 
             if (tirer && etatsort == false){
