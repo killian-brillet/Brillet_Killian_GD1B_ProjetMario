@@ -333,7 +333,7 @@ class Level extends Phaser.Scene{
         porteouverte = false
 
         // Premier dialogue
-        dialogue1 = this.add.image(448,360,'dialogue1')
+        dialogue1 = this.add.image(448,360,'dialogue1').setInteractive({ cursor: 'pointer' })
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
         this.physics.pause()
@@ -894,6 +894,13 @@ class Level extends Phaser.Scene{
         if (passer){
             etatdialogue = false
             dialogue1.destroy();
+        }
+        dialogue1.on('pointerdown', function(){
+            etatdialogue = false
+            dialogue1.destroy();
+        });
+
+        if (etatdialogue == false){
             this.physics.resume()
         }
 
