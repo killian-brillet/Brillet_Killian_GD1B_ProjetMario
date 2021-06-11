@@ -3,6 +3,7 @@ var down;
 var left;
 var right;
 var entree;
+var pause;
 
 var player;
 var onGround;
@@ -77,6 +78,9 @@ var parallax2;
 
 var dialogue1;
 
+var menupause;
+var etatpause;
+
 class Level extends Phaser.Scene{
     constructor(){
         super("scenelevel");
@@ -89,8 +93,6 @@ class Level extends Phaser.Scene{
         /*Divers*/
         this.load.image('fond', 'assets/ciel.png');
         this.load.image('nuage', 'assets/NUAGE.png');
-        this.load.image('parallax1', 'assets/parralax1.png');
-        this.load.image('parallax2', 'assets/parralax2.png');
         this.load.image('assetblocs', 'assets/blocs.png');
         this.load.image('assetfond', 'assets/tilesfond.png');
         this.load.image('plateforme', 'assets/plateforme.png');
@@ -133,6 +135,8 @@ class Level extends Phaser.Scene{
         this.load.image('cooldown2', 'assets/cooldown2.png');
         this.load.image('cooldown1', 'assets/cooldown1.png');
         this.load.image('cooldown0', 'assets/cooldown0.png');
+
+        this.load.image('pause', 'assets/pause.png');
 
 
         /*Tilemap*/
@@ -178,6 +182,7 @@ class Level extends Phaser.Scene{
         boutontir = this.input.keyboard.addKeys('SPACE');
         boutonpot = this.input.keyboard.addKeys('E');
         entree = this.input.keyboard.addKeys('ENTER');
+        pause = this.input.keyboard.addKeys('ESC')
 
         /*Création Sprites*/
         player = this.physics.add.sprite(450, 360, 'perso');
@@ -283,6 +288,7 @@ class Level extends Phaser.Scene{
         compteurcle  = 0
         comptPot = 0
         vieboss = 3
+        etatpause = false
         porteouverte = false
 
         /*dialogue1 = this.add.image(448,360,'dialogue1')
@@ -336,7 +342,7 @@ class Level extends Phaser.Scene{
         this.anims.create({
             key: 'persoidle',
             frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
-            frameRate: 10,
+            frameRate: 8,
             repeat: -1
         });
 
@@ -348,9 +354,16 @@ class Level extends Phaser.Scene{
         });
 
         this.anims.create({
-            key: 'persodroite',
+            key: 'persomarche',
             frames: this.anims.generateFrameNumbers('perso', { start: 8, end: 13 }),
-            frameRate: 15,
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'persosaut',
+            frames: this.anims.generateFrameNumbers('perso', { start: 14, end: 15 }),
+            frameRate: 3,
             repeat: 0
         });
 
@@ -450,38 +463,43 @@ class Level extends Phaser.Scene{
         timerinvuboss++
 
         /*Controles joueur*/
-        if (right.D.isDown)
+        if (right.D.isDown && etatpause == false)
         {
             player.setVelocityX(200);
             player.setFlipX(false);
             player.setOffset(10,25)
-            player.anims.play('persodroite', true)
+            if (onGround){
+                player.anims.play('persomarche', true)
+            }
             sensperso = 0;
         }
         
-        else if (left.Q.isDown)
+        else if (left.Q.isDown && etatpause == false)
         {
             player.setVelocityX(-200);
             player.setFlipX(true);
             player.setOffset(20,25)
-            player.anims.play('persodroite', true)
+            if (onGround){
+                player.anims.play('persomarche', true)
+            }
             sensperso = 1;
         }
     
-        else
+        else if (onGround)
         {
+            player.anims.play('persoidle', true)
             player.setVelocityX(0); 
         }
 
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
 
-        if (jump && onGround){
-                player.setVelocityY(-600);
+        if (jump && onGround && etatpause == false){
+            player.anims.play('persosaut', true)
+            player.setVelocityY(-600);
         }
 
-        if (player.y >= 440)
+        if (player.y >= 410)
         {
-            this.physics.pause();
             this.scene.restart()
         }
 
@@ -497,14 +515,14 @@ class Level extends Phaser.Scene{
 
         /*Ennemis classiques*/
 
-        if (ennemiGD.x <= 632)
+        if (ennemiGD.x <= 632 && etatpause == false)
         {
             ennemiGD.setVelocityX(100);
             ennemiGD.anims.play('ennemiGD', true)
             ennemiGD.setFlipX(true);
         }
 
-        else if (ennemiGD.x >= 874)
+        else if (ennemiGD.x >= 874 && etatpause == false)
         {
             ennemiGD.setVelocityX(-100); 
             ennemiGD.anims.play('ennemiGD', true)  
@@ -580,7 +598,7 @@ class Level extends Phaser.Scene{
             timerinvuboss = 0
         }
 
-        if (timerboss == 120 && bossexist == true && compteurmeca <= 2){
+        if (timerboss == 180 && bossexist == true && compteurmeca <= 2){
             balleboss = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
             balleboss.setFlipX(true)
             balleboss.setScale(1.5)
@@ -588,7 +606,7 @@ class Level extends Phaser.Scene{
             compteurmeca++
             timerboss = 0
         }
-        else if (timerboss == 120 && bossexist == true && compteurmeca == 3){
+        else if (timerboss == 180 && bossexist == true && compteurmeca == 3){
             balleboss = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
             balleboss2 = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
             balleboss3 = balleennemi.create(boss.x+135, boss.y-48, 'balleennemi')
@@ -615,7 +633,7 @@ class Level extends Phaser.Scene{
 
         /*Creation plateforme*/
         this.input.on('pointerdown', function (pointer) {
-            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false){
+            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false){
                 player.anims.play('persosort', true)
                 const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
                 bloc = plateforme.create(worldPoint.x, worldPoint.y, 'plateforme')
@@ -645,7 +663,7 @@ class Level extends Phaser.Scene{
         }
 
         /*Tir Projectile*/
-        if (mana >= 1){
+        if (mana >= 1 && etatpause == false){
             const tirer = Phaser.Input.Keyboard.JustDown(boutontir.SPACE);
 
             if (tirer && etatsort == false){
@@ -672,8 +690,26 @@ class Level extends Phaser.Scene{
             }
         }
 
-
         /* INTERFACE */
+
+
+        const echap = Phaser.Input.Keyboard.JustDown(pause.ESC);
+
+        if (echap){
+            if (etatpause == false){
+                this.physics.pause()
+                menupause = this.add.image(448, 224, 'pause')
+                menupause.setScrollFactor(0);
+                menupause.setDepth(5)
+                etatpause = true
+            }
+            else if (etatpause == true){
+                this.physics.resume()
+                menupause.destroy()
+                etatpause = false
+            }
+        }
+        
 
         const passer = Phaser.Input.Keyboard.JustDown(entree.ENTER);
         if (passer){
