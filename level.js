@@ -332,11 +332,11 @@ class Level extends Phaser.Scene{
         porteouverte = false
 
         // Premier dialogue
-        dialogue1 = this.add.image(448,360,'dialogue1')
+        /*dialogue1 = this.add.image(448,360,'dialogue1')
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
         this.physics.pause()
-        etatdialogue = true
+        etatdialogue = true*/
 
         /*Animations*/
 
