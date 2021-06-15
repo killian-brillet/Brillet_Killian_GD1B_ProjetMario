@@ -241,16 +241,19 @@ class Level extends Phaser.Scene{
         pause = this.input.keyboard.addKeys('ESC')
 
         if (controlechoisi == 2){
-            porthaut = this.add.image(770,315, 'porthaut').setInteractive({ cursor: 'pointer' })
+            porthaut = this.add.image(730,280, 'porthaut').setInteractive({ cursor: 'pointer' })
             porthaut.setScrollFactor(0)
+            porthaut.setScale(1.2)
             porthaut.setDepth(9);
 
-            portgauche = this.add.image(695,390, 'portgauche').setInteractive({ cursor: 'pointer' })
+            portgauche = this.add.image(635,380, 'portgauche').setInteractive({ cursor: 'pointer' })
             portgauche.setScrollFactor(0)
+            portgauche.setScale(1.2)
             portgauche.setDepth(9);
 
-            portdroite = this.add.image(845,390, 'portdroite').setInteractive({ cursor: 'pointer' })
+            portdroite = this.add.image(825,380, 'portdroite').setInteractive({ cursor: 'pointer' })
             portdroite.setScrollFactor(0)
+            portdroite.setScale(1.2)
             portdroite.setDepth(9);
 
             portprojectile = this.add.image(65,320, 'portproj').setInteractive({ cursor: 'pointer' })
