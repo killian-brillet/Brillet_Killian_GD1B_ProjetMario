@@ -380,8 +380,6 @@ class Level extends Phaser.Scene{
         dialogue1.setScrollFactor(0)
         etatdialogue1 = true
         etatpausedialogue = true
-
-        etatdialogue2 = false
         /*Animations*/
 
         this.anims.create({
@@ -1050,7 +1048,7 @@ class Level extends Phaser.Scene{
             if (passer){
                 etatdialogue1 = false
                 dialogue1.destroy();
-                this.physics.resume()
+                etatpausedialogue = false
                 /*etatdialogue2 = true
                 dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
                 dialogue2.setDepth(10)
@@ -1059,7 +1057,7 @@ class Level extends Phaser.Scene{
             dialogue1.on('pointerdown', function(){
                 etatdialogue1 = false
                 dialogue1.destroy();
-                this.physics.resume()
+                etatpausedialogue = false
                 /*etatdialogue2 = true
                 dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
                 dialogue2.setDepth(10)
@@ -1067,26 +1065,10 @@ class Level extends Phaser.Scene{
             });
         }
 
-        if(etatdialogue2 == true){
-            dialogue2.on('pointerdown', function(){
-                etatdialogue2 = false
-                dialogue2.destroy();
-                etatpausedialogue = false
-            });
-            if (passer){
-                etatdialogue2 = false
-                dialogue2.destroy();
-                etatpausedialogue = false
-            }
-        }
-
-        if (etatpausedialogue == true){
-            this.physics.pause()
-        }
         if (etatpausedialogue == false){
             this.physics.resume()
         }
-    
+        
             // Interface In game
         if (vie == 3){
             if (mana == 4){
