@@ -98,6 +98,7 @@ var moveRight
 var moveJump
 var usePot
 var useProj
+var overButton
 
 var musiquelevel
 var musiqueboss
@@ -365,6 +366,7 @@ class Level extends Phaser.Scene{
         vieboss = 3
         etatpause = false
         porteouverte = false
+        overButton = false
 
         // Premier dialogue
         dialogue1 = this.add.image(448,360,'dialogue1').setInteractive({ cursor: 'pointer' })
@@ -615,12 +617,24 @@ class Level extends Phaser.Scene{
             portdroite.on('pointerup', function(){
                 moveRight = false
             });
+            portdroite.on('pointerover', function(){
+                overButton = true
+            });
+            portdroite.on('pointerout', function(){
+                overButton = false
+            });
 
             portgauche.on('pointerdown', function(){
                 moveLeft = true
             });
             portgauche.on('pointerup', function(){
                 moveLeft = false
+            });
+            portgauche.on('pointerover', function(){
+                overButton = true
+            });
+            portgauche.on('pointerout', function(){
+                overButton = false
             });
 
             porthaut.on('pointerdown', function(){
@@ -629,6 +643,12 @@ class Level extends Phaser.Scene{
             porthaut.on('pointerup', function(){
                 moveJump = false
             });
+            porthaut.on('pointerover', function(){
+                overButton = true
+            });
+            porthaut.on('pointerout', function(){
+                overButton = false
+            });
 
             portprojectile.on('pointerdown', function(){
                 useProj = true
@@ -636,12 +656,24 @@ class Level extends Phaser.Scene{
             portprojectile.on('pointerup', function(){
                 useProj = false
             });
+            portprojectile.on('pointerover', function(){
+                overButton = true
+            });
+            portprojectile.on('pointerout', function(){
+                overButton = false
+            });
 
             portpotion.on('pointerdown', function(){
                 usePot = true
             });
             portpotion.on('pointerup', function(){
                 usePot = false
+            });
+            portpotion.on('pointerover', function(){
+                overButton = true
+            });
+            portpotion.on('pointerout', function(){
+                overButton = false
             });
 
             if (moveRight == true){
@@ -837,7 +869,7 @@ class Level extends Phaser.Scene{
 
         /*Creation plateforme*/
         this.input.on('pointerdown', function (pointer) {
-            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatpausedialogue == false){
+            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatpausedialogue == false && overButton == false){
                 player.anims.play('persosort', true)
                 const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
                 bloc = plateforme.create(worldPoint.x, worldPoint.y, 'plateforme')
