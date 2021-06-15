@@ -103,7 +103,7 @@ var overButton
 var musiquelevel
 var musiqueboss
 var etatmusiquelevel = false
-var etatmusiquelevel = false
+var etatmusiqueboss = false
 
 class Level extends Phaser.Scene{
     constructor(){
@@ -199,10 +199,13 @@ class Level extends Phaser.Scene{
         /*Création de fond*/
         fond = this.add.image(448,224,'fond')
         fond.setScrollFactor(0)
+        fond.setDepth(-3)
         parallax2 = this.add.image(448,200,'nuage')
         parallax2.setScrollFactor(0.05)
+        parallax2.setDepth(-3)
         parallax1 = this.add.image(500,150,'montagne')
         parallax1.setScrollFactor(0.1)
+        parallax1.setDepth(-3)
 
         // Musique
 
@@ -265,7 +268,7 @@ class Level extends Phaser.Scene{
             portpotion.setDepth(9);
         }
         /*Création Sprites*/
-        player = this.physics.add.sprite(450, 350, 'perso');
+        player = this.physics.add.sprite(510, 350, 'perso');
         player.setGravity(0, 1000);
         player.setSize(30,45)
         player.setOffset(10,25)
@@ -366,7 +369,7 @@ class Level extends Phaser.Scene{
         regenboss = false
         compteurcle  = 0
         comptPot = 0
-        vieboss = 3
+        vieboss = 1
         etatpause = false
         porteouverte = false
         overButton = false
@@ -376,7 +379,7 @@ class Level extends Phaser.Scene{
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
         etatdialogue1 = true
-        etatpausedialogue = false
+        etatpausedialogue = true
 
         etatdialogue2 = false
         /*Animations*/
@@ -506,9 +509,9 @@ class Level extends Phaser.Scene{
                 if (vieboss == 0){
                     boss.destroy();
                     bossexist = false;
-                    this.scene.start("scenemenu");
                     this.musiquelevel.stop()
                     etatmusiquelevel = false
+                    this.scene.start("scenemenu");
                 }
             }
         }
@@ -821,9 +824,26 @@ class Level extends Phaser.Scene{
 
         /*Boss*/
 
-        if(player.x >= 4900){
+        if(player.x >= 4900 && vieboss >= 1){
             this.cameras.main.pan(5400, 0, 3000, 'Power2');
-            player.setCollideWorldBounds(true);
+            this.musiqueboss = this.sound.add('musiqueboss')
+            var musicConfigboss = {
+                mute : false,
+                volume : 0.1,
+                rate : 1,
+                loop : true,
+            }
+            this.musiquelevel.stop()
+            if(!etatmusiqueboss){
+                this.musiqueboss.play(musicConfigboss)
+                etatmusiqueboss = true
+            }
+        }
+
+        if (vieboss == 0){
+            console.log('test')
+            this.musiqueboss.stop()
+            etatmusiqueboss = false
         }
 
         if (timerinvuboss == 350 && invuboss == true){
@@ -878,7 +898,7 @@ class Level extends Phaser.Scene{
                 bloc = plateforme.create(worldPoint.x, worldPoint.y, 'plateforme')
                 bloc.setScale(1.5)
                 bloc.setImmovable(true);
-                bloc.setDepth(0)
+                bloc.setDepth(-1)
                 cooldown = true;
                 etatsort = true;
                 mana--
@@ -1049,10 +1069,12 @@ class Level extends Phaser.Scene{
             dialogue2.on('pointerdown', function(){
                 etatdialogue2 = false
                 dialogue2.destroy();
+                etatpausedialogue = false
             });
             if (passer){
                 etatdialogue2 = false
                 dialogue2.destroy();
+                etatpausedialogue = false
             }
         }
 
