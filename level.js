@@ -188,7 +188,6 @@ class Level extends Phaser.Scene{
         this.load.spritesheet('mainmenu', 'assets/mainmenu.png', { frameWidth: 160, frameHeight: 50 });
 
         // Audio
-
         this.load.audio('musiquelevel', 'assets/musique/level.mp3')
         this.load.audio('musiqueboss', 'assets/musique/boss.mp3')
         
@@ -590,9 +589,6 @@ class Level extends Phaser.Scene{
             player.setVelocityX(200);
             player.setFlipX(false);
             player.setOffset(10,25)
-            if (onGround){
-                player.anims.play('persomarche', true)
-            }
             sensperso = 0;
         }
         
@@ -600,17 +596,11 @@ class Level extends Phaser.Scene{
             player.setVelocityX(-200);
             player.setFlipX(true);
             player.setOffset(20,25)
-            if (onGround){
-                player.anims.play('persomarche', true)
-            }
             sensperso = 1;
         }
     
         else{
             player.setVelocityX(0); 
-            if (onGround){
-                player.anims.play('persoidle', true)
-            }
         }
 
         // Controle portable
@@ -684,29 +674,19 @@ class Level extends Phaser.Scene{
                 player.setVelocityX(200);
                 player.setFlipX(false);
                 player.setOffset(10,25)
-                if (onGround){
-                    player.anims.play('persomarche', true)
-                }
                 sensperso = 0;
             }
             else if (moveLeft == true){
                 player.setVelocityX(-200);
                 player.setFlipX(true);
                 player.setOffset(20,25)
-                if (onGround){
-                    player.anims.play('persomarche', true)
-                }
                 sensperso = 1;
             }
             else if (moveJump == true && onGround){
-                player.anims.play('persosaut', true)
                 player.setVelocityY(-600);
             }
             else{
                 player.setVelocityX(0); 
-                if (onGround){
-                    player.anims.play('persoidle', true)
-                }
             }
 
             if (useProj == true && mana >= 1 && etatpause == false && etatpausedialogue == false && etatsort == false){
@@ -734,7 +714,6 @@ class Level extends Phaser.Scene{
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
 
         if (jump && onGround && etatpause == false && controlechoisi == 1){
-            player.anims.play('persosaut', true)
             player.setVelocityY(-600);
         }
 
@@ -750,6 +729,25 @@ class Level extends Phaser.Scene{
                 timer = 0;
                 player.setTint(0xffffff);
                 inv = false;
+            }
+        }
+
+        // Anims
+
+        if (onGround){
+            if (player.body.velocity.x != 0){
+                player.anims.play('persomarche', true)
+            }
+            else if (player.body.velocity.x == 0){
+                player.anims.play('persoidle', true)
+            }
+        }
+        else if (!onGround){
+            if (player.body.velocity.y <= 0){
+                player.anims.play('persosaut', true)
+            }
+            else if (player.body.velocity.y > 0){
+                player.anims.play('persoidle', true)
             }
         }
 
