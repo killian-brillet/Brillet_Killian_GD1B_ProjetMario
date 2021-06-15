@@ -620,12 +620,12 @@ class Level extends Phaser.Scene{
             portdroite.on('pointerup', function(){
                 moveRight = false
             });
-            /*portdroite.on('pointerover', function(){
+            portdroite.on('pointerover', function(){
                 overButton = true
             });
             portdroite.on('pointerout', function(){
                 overButton = false
-            });*/
+            });
 
             portgauche.on('pointerdown', function(){
                 moveLeft = true
@@ -633,12 +633,12 @@ class Level extends Phaser.Scene{
             portgauche.on('pointerup', function(){
                 moveLeft = false
             });
-            /*portgauche.on('pointerover', function(){
+            portgauche.on('pointerover', function(){
                 overButton = true
             });
             portgauche.on('pointerout', function(){
                 overButton = false
-            });*/
+            });
 
             porthaut.on('pointerdown', function(){
                 moveJump = true
@@ -646,12 +646,12 @@ class Level extends Phaser.Scene{
             porthaut.on('pointerup', function(){
                 moveJump = false
             });
-            /*porthaut.on('pointerover', function(){
+            porthaut.on('pointerover', function(){
                 overButton = true
             });
             porthaut.on('pointerout', function(){
                 overButton = false
-            });*/
+            });
 
             portprojectile.on('pointerdown', function(){
                 useProj = true
@@ -659,12 +659,12 @@ class Level extends Phaser.Scene{
             portprojectile.on('pointerup', function(){
                 useProj = false
             });
-            /*portprojectile.on('pointerover', function(){
+            portprojectile.on('pointerover', function(){
                 overButton = true
             });
             portprojectile.on('pointerout', function(){
                 overButton = false
-            });*/
+            });
 
             portpotion.on('pointerdown', function(){
                 usePot = true
@@ -672,12 +672,12 @@ class Level extends Phaser.Scene{
             portpotion.on('pointerup', function(){
                 usePot = false
             });
-            /*portpotion.on('pointerover', function(){
+            portpotion.on('pointerover', function(){
                 overButton = true
             });
             portpotion.on('pointerout', function(){
                 overButton = false
-            });*/
+            });
 
             if (moveRight == true){
                 player.setVelocityX(200);
@@ -872,7 +872,7 @@ class Level extends Phaser.Scene{
 
         /*Creation plateforme*/
         this.input.on('pointerdown', function (pointer) {
-            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatpausedialogue == false && overButton == false && moveRight == false && moveLeft == false && moveJump == false && usePot == false && useProj == false){
+            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatpausedialogue == false && overButton == false){
                 player.anims.play('persosort', true)
                 const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
                 bloc = plateforme.create(worldPoint.x, worldPoint.y, 'plateforme')
