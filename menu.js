@@ -26,8 +26,6 @@ class Menu extends Phaser.Scene{
         this.load.spritesheet('quitter', 'assets/quitter.png', { frameWidth: 232, frameHeight: 90 });
         this.load.spritesheet('ordi', 'assets/parametresordi.png', { frameWidth: 154, frameHeight: 154 });
         this.load.spritesheet('portable', 'assets/portable.png', { frameWidth: 154, frameHeight: 154 });
-
-        this.load.audio('musiqueboss', 'assets/musique/boss.mp3')
     }
 
     create(){
