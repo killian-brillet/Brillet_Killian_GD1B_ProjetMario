@@ -1049,19 +1049,21 @@ class Level extends Phaser.Scene{
         if (etatdialogue1 == true){
             if (passer){
                 etatdialogue1 = false
-                etatdialogue2 = true
                 dialogue1.destroy();
+                etatpausedialogue = false
+                /*etatdialogue2 = true
                 dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
                 dialogue2.setDepth(10)
-                dialogue2.setScrollFactor(0)
+                dialogue2.setScrollFactor(0)*/
             }
             dialogue1.on('pointerdown', function(){
                 etatdialogue1 = false
-                etatdialogue2 = true
                 dialogue1.destroy();
+                etatpausedialogue = false
+                /*etatdialogue2 = true
                 dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
                 dialogue2.setDepth(10)
-                dialogue2.setScrollFactor(0)
+                dialogue2.setScrollFactor(0)*/
             });
         }
 
