@@ -77,7 +77,10 @@ var parallax1;
 var parallax2;
 
 var dialogue1;
-var etatdialogue;
+var etatdialogue1;
+var dialogue2;
+var etatdialogue2;
+var etatpausedialogue;
 
 var menupause;
 var etatpause;
@@ -90,6 +93,16 @@ var portdroite
 var portgauche
 var portpotion
 var portprojectile
+var moveLeft
+var moveRight
+var moveJump
+var usePot
+var useProj
+
+var musiquelevel
+var musiqueboss
+var etatmusiquelevel = false
+var etatmusiquelevel = false
 
 class Level extends Phaser.Scene{
     constructor(){
@@ -103,6 +116,7 @@ class Level extends Phaser.Scene{
         /*Divers*/
         this.load.image('fond', 'assets/ciel.png');
         this.load.image('nuage', 'assets/NUAGE.png');
+        this.load.image('montagne','assets/montagne.png')
         this.load.image('assetblocs', 'assets/blocs.png');
         this.load.image('assetfond', 'assets/tilesfond.png');
         this.load.image('plateforme', 'assets/plateforme.png');
@@ -112,6 +126,7 @@ class Level extends Phaser.Scene{
         this.load.image('potion', 'assets/potion.png');
 
         this.load.image('dialogue1', 'assets/dialogue.png');
+        this.load.image('dialogue2', 'assets/dialogue2.png');
 
         this.load.spritesheet('balle', 'assets/balle.png', { frameWidth: 40, frameHeight: 25 });
 
@@ -170,18 +185,37 @@ class Level extends Phaser.Scene{
         this.load.spritesheet('reprendre', 'assets/reprendre.png', { frameWidth: 225, frameHeight: 50 });
         this.load.spritesheet('recommencer', 'assets/recommencer.png', { frameWidth: 273, frameHeight: 50 });
         this.load.spritesheet('mainmenu', 'assets/mainmenu.png', { frameWidth: 160, frameHeight: 50 });
+
+        // Audio
+
+        this.load.audio('musiquelevel', 'assets/musique/level.mp3')
+        this.load.audio('musiqueboss', 'assets/musique/boss.mp3')
         
     }
 
     create(){
-        /*Création de fond*/
 
+        /*Création de fond*/
         fond = this.add.image(448,224,'fond')
         fond.setScrollFactor(0)
-        /*parallax2 = this.add.image(448,224,'parallax2')
-        parallax2.setScrollFactor(0.3)*/
-        parallax1 = this.add.image(2000,224,'nuage')
-        parallax1.setScrollFactor(0.5)
+        parallax2 = this.add.image(448,200,'nuage')
+        parallax2.setScrollFactor(0.05)
+        parallax1 = this.add.image(500,150,'montagne')
+        parallax1.setScrollFactor(0.1)
+
+        // Musique
+
+        this.musiquelevel = this.sound.add('musiquelevel')
+        var musicConfiglevel = {
+            mute : false,
+            volume : 0.1,
+            rate : 1,
+            loop : true,
+        }
+        if (!etatmusiquelevel){
+            this.musiquelevel.play(musicConfiglevel)
+            etatmusiquelevel = true;
+        }
 
         /*Inititialistion Tilemap*/
         const map = this.make.tilemap({key: 'cartealpha'});
@@ -336,9 +370,10 @@ class Level extends Phaser.Scene{
         dialogue1 = this.add.image(448,360,'dialogue1').setInteractive({ cursor: 'pointer' })
         dialogue1.setDepth(10)
         dialogue1.setScrollFactor(0)
-        this.physics.pause()
-        etatdialogue = true
+        etatdialogue1 = true
+        etatpausedialogue = false
 
+        etatdialogue2 = false
         /*Animations*/
 
         this.anims.create({
@@ -467,6 +502,8 @@ class Level extends Phaser.Scene{
                     boss.destroy();
                     bossexist = false;
                     this.scene.start("scenemenu");
+                    this.musiquelevel.stop()
+                    etatmusiquelevel = false
                 }
             }
         }
@@ -543,7 +580,7 @@ class Level extends Phaser.Scene{
 
         /*Controles joueur*/
 
-        if (right.D.isDown && etatpause == false && etatdialogue == false && controlechoisi == 1){
+        if (right.D.isDown && etatpause == false && etatpausedialogue == false && controlechoisi == 1){
             player.setVelocityX(200);
             player.setFlipX(false);
             player.setOffset(10,25)
@@ -553,7 +590,7 @@ class Level extends Phaser.Scene{
             sensperso = 0;
         }
         
-        else if (left.Q.isDown && etatpause == false && etatdialogue == false && controlechoisi == 1){
+        else if (left.Q.isDown && etatpause == false && etatpausedialogue == false && controlechoisi == 1){
             player.setVelocityX(-200);
             player.setFlipX(true);
             player.setOffset(20,25)
@@ -570,8 +607,44 @@ class Level extends Phaser.Scene{
             }
         }
 
+        // Controle portable
         if (controlechoisi == 2){
-            portdroite.on('pointerover', function(){
+            portdroite.on('pointerdown', function(){
+                moveRight = true
+            });
+            portdroite.on('pointerup', function(){
+                moveRight = false
+            });
+
+            portgauche.on('pointerdown', function(){
+                moveLeft = true
+            });
+            portgauche.on('pointerup', function(){
+                moveLeft = false
+            });
+
+            porthaut.on('pointerdown', function(){
+                moveJump = true
+            });
+            porthaut.on('pointerup', function(){
+                moveJump = false
+            });
+
+            portprojectile.on('pointerdown', function(){
+                useProj = true
+            });
+            portprojectile.on('pointerup', function(){
+                useProj = false
+            });
+
+            portpotion.on('pointerdown', function(){
+                usePot = true
+            });
+            portpotion.on('pointerup', function(){
+                usePot = false
+            });
+
+            if (moveRight == true){
                 player.setVelocityX(200);
                 player.setFlipX(false);
                 player.setOffset(10,25)
@@ -579,9 +652,8 @@ class Level extends Phaser.Scene{
                     player.anims.play('persomarche', true)
                 }
                 sensperso = 0;
-            });
-
-            portgauche.on('pointerover', function(){
+            }
+            else if (moveLeft == true){
                 player.setVelocityX(-200);
                 player.setFlipX(true);
                 player.setOffset(20,25)
@@ -589,12 +661,38 @@ class Level extends Phaser.Scene{
                     player.anims.play('persomarche', true)
                 }
                 sensperso = 1;
-            });
-
-            porthaut.on('pointerover', function(){
+            }
+            else if (moveJump == true && onGround){
                 player.anims.play('persosaut', true)
                 player.setVelocityY(-600);
-            });
+            }
+            else{
+                player.setVelocityX(0); 
+                if (onGround){
+                    player.anims.play('persoidle', true)
+                }
+            }
+
+            if (useProj == true && mana >= 1 && etatpause == false && etatpausedialogue == false && etatsort == false){
+                player.anims.play('persosort', true)
+                balle = ballegroupe.create(player.x, player.y, 'balle')
+                balle.anims.play('balle', true);
+                etatsort = true;
+                if (sensperso == 0){
+                    balle.setVelocityX(800);
+                }
+                else if (sensperso == 1){
+                    balle.setVelocityX(-800)
+                    balle.setFlipX(true);
+                }
+                mana--
+            }
+
+            if (usePot == true && comptPot == 1){
+                comptPot = 0
+                mana = 4;
+                interPot.destroy()
+            }
         }
 
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
@@ -621,14 +719,14 @@ class Level extends Phaser.Scene{
 
         /*Ennemis classiques*/
 
-        if (ennemiGD.x <= 632 && etatpause == false && etatdialogue == false)
+        if (ennemiGD.x <= 632 && etatpause == false && etatpausedialogue == false)
         {
             ennemiGD.setVelocityX(100);
             ennemiGD.anims.play('ennemiGD', true)
             ennemiGD.setFlipX(true);
         }
 
-        else if (ennemiGD.x >= 874 && etatpause == false && etatdialogue == false)
+        else if (ennemiGD.x >= 874 && etatpause == false && etatpausedialogue == false)
         {
             ennemiGD.setVelocityX(-100); 
             ennemiGD.anims.play('ennemiGD', true)  
@@ -739,7 +837,7 @@ class Level extends Phaser.Scene{
 
         /*Creation plateforme*/
         this.input.on('pointerdown', function (pointer) {
-            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatdialogue == false){
+            if (this.input.manager.activePointer.isDown && cooldown == false && mana >= 1 && plateformeexist == false && etatsort == false && etatpause == false && etatpausedialogue == false){
                 player.anims.play('persosort', true)
                 const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
                 bloc = plateforme.create(worldPoint.x, worldPoint.y, 'plateforme')
@@ -770,7 +868,7 @@ class Level extends Phaser.Scene{
         }
 
         /*Tir Projectile*/
-        if (mana >= 1 && etatpause == false && etatdialogue == false && controlechoisi == 1){
+        if (mana >= 1 && etatpause == false && etatpausedialogue == false && controlechoisi == 1){
             const tirer = Phaser.Input.Keyboard.JustDown(boutontir.SPACE);
 
             if (tirer && etatsort == false){
@@ -884,6 +982,8 @@ class Level extends Phaser.Scene{
             });
     
             mainmenu.on('pointerdown', function(){
+                this.musiquelevel.stop()
+                etatmusiquelevel = false
                 this.scene.start("scenemenu");
             }, this);
         }
@@ -891,19 +991,42 @@ class Level extends Phaser.Scene{
             // Dialogues
 
         const passer = Phaser.Input.Keyboard.JustDown(entree.ENTER);
-        if (passer){
-            etatdialogue = false
-            dialogue1.destroy();
+        if (etatdialogue1 == true){
+            if (passer){
+                etatdialogue1 = false
+                etatdialogue2 = true
+                dialogue1.destroy();
+                dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
+                dialogue2.setDepth(10)
+                dialogue2.setScrollFactor(0)
+            }
+            dialogue1.on('pointerdown', function(){
+                etatdialogue1 = false
+                etatdialogue2 = true
+                dialogue1.destroy();
+                dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
+                dialogue2.setDepth(10)
+                dialogue2.setScrollFactor(0)
+            });
         }
-        dialogue1.on('pointerdown', function(){
-            etatdialogue = false
-            dialogue1.destroy();
-        });
 
-        if (etatdialogue == false){
+        if(etatdialogue2 == true){
+            dialogue2.on('pointerdown', function(){
+                etatdialogue2 = false
+                dialogue2.destroy();
+            });
+            if (passer){
+                etatdialogue2 = false
+                dialogue2.destroy();
+            }
+        }
+
+        if (etatpausedialogue == true){
+            this.physics.pause()
+        }
+        if (etatpausedialogue == false){
             this.physics.resume()
         }
-
     
             // Interface In game
         if (vie == 3){
