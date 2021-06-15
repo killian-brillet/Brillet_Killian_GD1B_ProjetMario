@@ -1050,7 +1050,7 @@ class Level extends Phaser.Scene{
             if (passer){
                 etatdialogue1 = false
                 dialogue1.destroy();
-                etatpausedialogue = false
+                this.physics.resume()
                 /*etatdialogue2 = true
                 dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
                 dialogue2.setDepth(10)
@@ -1059,7 +1059,7 @@ class Level extends Phaser.Scene{
             dialogue1.on('pointerdown', function(){
                 etatdialogue1 = false
                 dialogue1.destroy();
-                etatpausedialogue = false
+                this.physics.resume()
                 /*etatdialogue2 = true
                 dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
                 dialogue2.setDepth(10)
