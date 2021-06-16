@@ -8,6 +8,7 @@ var pause;
 var player;
 var onGround;
 var gameOver = false;
+var timergameover
 
 var ennemiGD;
 var ennemiGD2;
@@ -210,7 +211,7 @@ class Level extends Phaser.Scene{
 
         this.musiquelevel = this.sound.add('musiquelevel')
         var musicConfiglevel = {
-            mute : false,
+            mute : true,
             volume : 0.1,
             rate : 1,
             loop : true,
@@ -372,6 +373,7 @@ class Level extends Phaser.Scene{
         etatpause = false
         porteouverte = false
         overButton = false
+        timergameover = 0
 
         // Premier dialogue
         dialogue1 = this.add.image(448,360,'dialogue1').setInteractive({ cursor: 'pointer' })
@@ -440,13 +442,27 @@ class Level extends Phaser.Scene{
             key: 'persomarche',
             frames: this.anims.generateFrameNumbers('perso', { start: 8, end: 13 }),
             frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'persohaut',
+            frames: this.anims.generateFrameNumbers('perso', { start: 14, end: 15 }),
+            frameRate: 4,
             repeat: 0
         });
 
         this.anims.create({
-            key: 'persosaut',
-            frames: this.anims.generateFrameNumbers('perso', { start: 14, end: 15 }),
-            frameRate: 3,
+            key: 'persobas',
+            frames: this.anims.generateFrameNumbers('perso', { start: 16, end: 20 }),
+            frameRate: 4,
+            repeat: 1
+        });
+
+        this.anims.create({
+            key: 'persomort',
+            frames: this.anims.generateFrameNumbers('perso', { start: 1, end: 2 }),
+            frameRate: 4,
             repeat: 0
         });
 
@@ -491,10 +507,8 @@ class Level extends Phaser.Scene{
             if (inv === false){
                 inv = true;
                 vie--;
-                player.setTint(0xff0000);
-                if (vie === 0){
-                    this.physics.pause();
-                    this.scene.restart()
+                if (vie >= 1){
+                    player.setTint(0xff0000);
                 }
             }
         }
@@ -533,7 +547,9 @@ class Level extends Phaser.Scene{
             if (inv === false){
                 inv = true;
                 vie--;
-                player.setTint(0xff0000);
+                if (vie >= 1){
+                    player.setTint(0xff0000);
+                }
                 if (vie === 0){
                     this.physics.pause();
                     this.scene.restart()
@@ -582,6 +598,16 @@ class Level extends Phaser.Scene{
         timertourelle++
         timerboss++
         timerinvuboss++
+
+        if (vie == 0){
+            console.log('Hellow')
+            this.physics.pause();
+            timergameover ++
+        }
+        if (timergameover == 1000){
+            console.log('UwU')
+            this.scene.restart()
+        }
 
         /*Controles joueur*/
 
@@ -713,7 +739,7 @@ class Level extends Phaser.Scene{
 
         const jump = Phaser.Input.Keyboard.JustDown(up.Z);
 
-        if (jump && onGround && etatpause == false && controlechoisi == 1){
+        if (jump && onGround && etatpause == false && controlechoisi == 1 && etatpausedialogue == false){
             player.setVelocityY(-600);
         }
 
@@ -734,7 +760,7 @@ class Level extends Phaser.Scene{
 
         // Anims
 
-        if (onGround){
+        if (onGround && vie > 0){
             if (player.body.velocity.x != 0){
                 player.anims.play('persomarche', true)
             }
@@ -742,13 +768,16 @@ class Level extends Phaser.Scene{
                 player.anims.play('persoidle', true)
             }
         }
-        else if (!onGround){
+        else if (!onGround && vie > 0){
             if (player.body.velocity.y <= 0){
-                player.anims.play('persosaut', true)
+                player.anims.play('persohaut', true)
             }
             else if (player.body.velocity.y > 0){
-                player.anims.play('persoidle', true)
+                player.anims.play('persobas', true)
             }
+        }
+        else if (vie == 0){
+            player.anims.play('persomort')
         }
 
         /*Ennemis classiques*/
@@ -824,7 +853,7 @@ class Level extends Phaser.Scene{
             this.cameras.main.pan(5400, 0, 3000, 'Power2');
             this.musiqueboss = this.sound.add('musiqueboss')
             var musicConfigboss = {
-                mute : false,
+                mute : true,
                 volume : 0.1,
                 rate : 1,
                 loop : true,
@@ -837,7 +866,6 @@ class Level extends Phaser.Scene{
         }
 
         if (vieboss == 0){
-            console.log('test')
             this.musiqueboss.stop()
             etatmusiqueboss = false
         }
@@ -969,13 +997,13 @@ class Level extends Phaser.Scene{
                 mainmenu.setDepth(6)
 
                 etatpause = true
-                ennemiGD.anims.play('ennemiGD', false)
-                ennemiGD2.anims.play('ennemiGD', false)
-                ennemiGD3.anims.play('ennemiGD', false)
-                ennemiVol.anims.play('ennemiGD', false)
+                ennemiGD.anims.stop(null, true)
+                ennemiGD2.anims.stop(null, true)
+                ennemiGD3.anims.stop(null, true)
+                ennemiVol.anims.stop(null, true)
             }
             else if (etatpause == true){
-                this.physics.resume()
+                //this.physics.resume()
                 menupause.destroy()
                 reprendre.destroy()
                 recommencer.destroy()
@@ -984,7 +1012,7 @@ class Level extends Phaser.Scene{
                 ennemiGD.anims.play('ennemiGD', true)
                 ennemiGD2.anims.play('ennemiGD', true)
                 ennemiGD3.anims.play('ennemiGD', true)
-                ennemiVol.anims.play('ennemiGD', true)
+                ennemiVol.anims.play('ennemiVol', true)
             }
         }
 
@@ -998,7 +1026,7 @@ class Level extends Phaser.Scene{
             });
     
             reprendre.on('pointerdown', function(){
-                this.physics.resume()
+                //this.physics.resume()
                 menupause.destroy()
                 reprendre.destroy()
                 recommencer.destroy()
@@ -1007,7 +1035,7 @@ class Level extends Phaser.Scene{
                 ennemiGD.anims.play('ennemiGD', true)
                 ennemiGD2.anims.play('ennemiGD', true)
                 ennemiGD3.anims.play('ennemiGD', true)
-                ennemiVol.anims.play('ennemiGD', true)
+                ennemiVol.anims.play('ennemiVol', true)
             }, this);
 
 
@@ -1063,7 +1091,7 @@ class Level extends Phaser.Scene{
             });
         }
 
-        if (etatpausedialogue == false){
+        if (etatpausedialogue == false && vie >= 1){
             this.physics.resume()
         }
         
