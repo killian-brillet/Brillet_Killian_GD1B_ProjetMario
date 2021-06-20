@@ -19,13 +19,13 @@ class Menu extends Phaser.Scene{
 
 
     preload(){
-        this.load.image('fondmenu', 'assets/fondmenu.png');
-        this.load.image('etpa', 'assets/etpa.png');
-        this.load.spritesheet('jouer', 'assets/jouer.png', { frameWidth: 250, frameHeight: 110 });
-        this.load.spritesheet('tutoriel', 'assets/tutoriel.png', { frameWidth: 265, frameHeight: 90 });
-        this.load.spritesheet('quitter', 'assets/quitter.png', { frameWidth: 232, frameHeight: 90 });
-        this.load.spritesheet('ordi', 'assets/parametresordi.png', { frameWidth: 154, frameHeight: 154 });
-        this.load.spritesheet('portable', 'assets/portable.png', { frameWidth: 154, frameHeight: 154 });
+        this.load.image('fondmenu', 'assets/menu/fondmenu.png');
+        this.load.image('etpa', 'assets/menu/etpa.png');
+        this.load.spritesheet('jouer', 'assets/menu/jouer.png', { frameWidth: 250, frameHeight: 110 });
+        this.load.spritesheet('tutoriel', 'assets/menu/tutoriel.png', { frameWidth: 265, frameHeight: 90 });
+        this.load.spritesheet('quitter', 'assets/menu/quitter.png', { frameWidth: 232, frameHeight: 90 });
+        this.load.spritesheet('ordi', 'assets/menu/parametresordi.png', { frameWidth: 154, frameHeight: 154 });
+        this.load.spritesheet('portable', 'assets/menu/portable.png', { frameWidth: 154, frameHeight: 154 });
     }
 
     create(){

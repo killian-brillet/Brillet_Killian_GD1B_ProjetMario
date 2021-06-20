@@ -10,8 +10,8 @@ class Tutoriel extends Phaser.Scene{
 
 
     preload(){
-        this.load.image('tuto', 'assets/tuto.png');
-        this.load.spritesheet('retour', 'assets/retour.png', { frameWidth: 125, frameHeight: 125 });
+        this.load.image('tuto', 'assets/menu/tuto.png');
+        this.load.spritesheet('retour', 'assets/menu/retour.png', { frameWidth: 125, frameHeight: 125 });
     }
 
     create(){

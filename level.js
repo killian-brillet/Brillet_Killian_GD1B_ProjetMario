@@ -118,6 +118,8 @@ var overButton
 
 var musiquelevel
 var musiqueboss
+var musicConfiglevel
+var musicConfigboss
 var etatmusiquelevel = false
 var etatmusiqueboss = false
 
@@ -131,81 +133,80 @@ class Level extends Phaser.Scene{
     preload(){
 
         /*Divers*/
-        this.load.image('fond', 'assets/ciel.png');
-        this.load.image('nuage', 'assets/NUAGE.png');
-        this.load.image('montagne','assets/montagne.png')
+        this.load.image('fond', 'assets/fond/ciel.png');
+        this.load.image('nuage', 'assets/fond/NUAGE.png');
+        this.load.image('montagne','assets/fond/montagne.png')
 
-        this.load.image('assetblocs', 'assets/blocs.png');
-        this.load.image('assetfond', 'assets/tilesfond.png');
-        this.load.image('plateforme', 'assets/plateforme.png');
-        this.load.image('porte', 'assets/porte.png');
+        this.load.image('assetblocs', 'assets/tiles/blocs.png');
+        this.load.image('assetfond', 'assets/tiles/tilesfond.png');
 
-        this.load.image('rouage', 'assets/rouage.png');
-        this.load.image('balleennemi', 'assets/balleennemi.png');
-        this.load.image('potion', 'assets/potion.png');
+        this.load.image('plateforme', 'assets/props/plateforme.png');
+        this.load.image('porte', 'assets/props/porte.png');
+        this.load.image('rouage', 'assets/props/rouage.png');
+        this.load.image('balleennemi', 'assets/props/balleennemi.png');
+        this.load.image('potion', 'assets/props/potion.png');
 
-        this.load.image('dialogue1', 'assets/dialogue.png');
-        this.load.image('dialogue2', 'assets/dialogue2.png');
-        this.load.image('dialogue3', 'assets/dialogue3.png');
-        this.load.image('dialogue4', 'assets/dialogue4.png');
+        this.load.image('dialogue1', 'assets/interface/dialogue.png');
+        this.load.image('dialogue2', 'assets/interface/dialogue2.png');
+        this.load.image('dialogue3', 'assets/interface/dialogue3.png');
+        this.load.image('dialogue4', 'assets/interface/dialogue4.png');
 
-        this.load.spritesheet('balle', 'assets/balle.png', { frameWidth: 40, frameHeight: 25 });
+        this.load.spritesheet('balle', 'assets/props/balle.png', { frameWidth: 40, frameHeight: 25 });
 
         /*Interface*/
-        this.load.image('interface4', 'assets/interface_4.png');
-        this.load.image('interface3', 'assets/interface_3.png');
-        this.load.image('interface2', 'assets/interface_2.png');
-        this.load.image('interface1', 'assets/interface_1.png');
-        this.load.image('interface0', 'assets/interface_0.png');
+        this.load.image('interface4', 'assets/interface/interface_4.png');
+        this.load.image('interface3', 'assets/interface/interface_3.png');
+        this.load.image('interface2', 'assets/interface/interface_2.png');
+        this.load.image('interface1', 'assets/interface/interface_1.png');
+        this.load.image('interface0', 'assets/interface/interface_0.png');
 
-        this.load.image('interface2_4', 'assets/interface_2_4.png');
-        this.load.image('interface2_3', 'assets/interface_2_3.png');
-        this.load.image('interface2_2', 'assets/interface_2_2.png');
-        this.load.image('interface2_1', 'assets/interface_2_1.png');
-        this.load.image('interface2_0', 'assets/interface_2_0.png');
+        this.load.image('interface2_4', 'assets/interface/interface_2_4.png');
+        this.load.image('interface2_3', 'assets/interface/interface_2_3.png');
+        this.load.image('interface2_2', 'assets/interface/interface_2_2.png');
+        this.load.image('interface2_1', 'assets/interface/interface_2_1.png');
+        this.load.image('interface2_0', 'assets/interface/interface_2_0.png');
 
-        this.load.image('interface1_4', 'assets/interface_1_4.png');
-        this.load.image('interface1_3', 'assets/interface_1_3.png');
-        this.load.image('interface1_2', 'assets/interface_1_2.png');
-        this.load.image('interface1_1', 'assets/interface_1_1.png');
-        this.load.image('interface1_0', 'assets/interface_1_0.png');
+        this.load.image('interface1_4', 'assets/interface/interface_1_4.png');
+        this.load.image('interface1_3', 'assets/interface/interface_1_3.png');
+        this.load.image('interface1_2', 'assets/interface/interface_1_2.png');
+        this.load.image('interface1_1', 'assets/interface/interface_1_1.png');
+        this.load.image('interface1_0', 'assets/interface/interface_1_0.png');
 
-        this.load.image('interface0_0', 'assets/interface_0_0.png');
+        this.load.image('interface0_0', 'assets/interface/interface_0_0.png');
 
-        this.load.image('rouage0', 'assets/rouage0.png');
-        this.load.image('rouage1', 'assets/rouage1.png');
-        this.load.image('rouage2', 'assets/rouage2.png');
-        this.load.image('rouage3', 'assets/rouage3.png');
+        this.load.image('rouage0', 'assets/interface/rouage0.png');
+        this.load.image('rouage1', 'assets/interface/rouage1.png');
+        this.load.image('rouage2', 'assets/interface/rouage2.png');
+        this.load.image('rouage3', 'assets/interface/rouage3.png');
 
-        this.load.image('cooldown3', 'assets/cooldown3.png');
-        this.load.image('cooldown2', 'assets/cooldown2.png');
-        this.load.image('cooldown1', 'assets/cooldown1.png');
-        this.load.image('cooldown0', 'assets/cooldown0.png');
+        this.load.image('cooldown3', 'assets/interface/cooldown3.png');
+        this.load.image('cooldown2', 'assets/interface/cooldown2.png');
+        this.load.image('cooldown1', 'assets/interface/cooldown1.png');
+        this.load.image('cooldown0', 'assets/interface/cooldown0.png');
 
-        this.load.image('pause', 'assets/pause.png');
+        this.load.image('pause', 'assets/menu/pause.png');
 
-        this.load.image('porthaut', 'assets/haut.png');
-        this.load.image('portgauche', 'assets/gauche.png');
-        this.load.image('portdroite', 'assets/droite.png');
-        this.load.image('portproj', 'assets/portproj.png');
-        this.load.image('portpot', 'assets/portpot.png');
+        this.load.image('porthaut', 'assets/interface/haut.png');
+        this.load.image('portgauche', 'assets/interface/gauche.png');
+        this.load.image('portdroite', 'assets/interface/droite.png');
+        this.load.image('portproj', 'assets/interface/portproj.png');
+        this.load.image('portpot', 'assets/interface/portpot.png');
 
         /*Tilemap*/
         this.load.tilemapTiledJSON('cartealpha', 'Tiled/CarteAlpha.json');
 
         /*Sprites personnages*/
-        this.load.spritesheet('perso', 'assets/Chi.png', { frameWidth: 60, frameHeight: 70 });
-        this.load.spritesheet('ennemi', 'assets/Kikai.png', { frameWidth: 62, frameHeight: 82 });
-        this.load.spritesheet('ennemiGD', 'assets/ennemiGD.png', { frameWidth: 50, frameHeight: 50 });
-        this.load.spritesheet('ennemivol', 'assets/drone.png', { frameWidth: 38, frameHeight: 26 });
-        this.load.spritesheet('tourelle', 'assets/tourelle.png', { frameWidth: 30, frameHeight: 42 });
-        this.load.spritesheet('boss', 'assets/BOSS.png', { frameWidth: 600, frameHeight: 400 });
+        this.load.spritesheet('perso', 'assets/personnages/Chi.png', { frameWidth: 60, frameHeight: 70 });
+        this.load.spritesheet('ennemiGD', 'assets/personnages/ennemiGD.png', { frameWidth: 50, frameHeight: 50 });
+        this.load.spritesheet('ennemivol', 'assets/personnages/drone.png', { frameWidth: 38, frameHeight: 26 });
+        this.load.spritesheet('tourelle', 'assets/personnages/tourelle.png', { frameWidth: 30, frameHeight: 42 });
+        this.load.spritesheet('boss', 'assets/personnages/BOSS.png', { frameWidth: 600, frameHeight: 400 });
 
         // Sprites Menu Pause
 
-        this.load.spritesheet('reprendre', 'assets/reprendre.png', { frameWidth: 225, frameHeight: 50 });
-        this.load.spritesheet('recommencer', 'assets/recommencer.png', { frameWidth: 273, frameHeight: 50 });
-        this.load.spritesheet('mainmenu', 'assets/mainmenu.png', { frameWidth: 160, frameHeight: 50 });
+        this.load.spritesheet('reprendre', 'assets/menu/reprendre.png', { frameWidth: 225, frameHeight: 50 });
+        this.load.spritesheet('recommencer', 'assets/menu/recommencer.png', { frameWidth: 273, frameHeight: 50 });
+        this.load.spritesheet('mainmenu', 'assets/menu/mainmenu.png', { frameWidth: 160, frameHeight: 50 });
 
         // Audio
         this.load.audio('musiquelevel', 'assets/musique/level.mp3')
@@ -225,20 +226,6 @@ class Level extends Phaser.Scene{
         parallax1 = this.add.image(500,150,'montagne')
         parallax1.setScrollFactor(0.1)
         parallax1.setDepth(-3)
-
-        // Musique
-
-        this.musiquelevel = this.sound.add('musiquelevel')
-        var musicConfiglevel = {
-            mute : true,
-            volume : 0.1,
-            rate : 1,
-            loop : true,
-        }
-        if (!etatmusiquelevel){
-            this.musiquelevel.play(musicConfiglevel)
-            etatmusiquelevel = true;
-        }
 
         /*Inititialistion Tilemap*/
 
@@ -294,7 +281,7 @@ class Level extends Phaser.Scene{
 
         /*Création Sprites*/
 
-        player = this.physics.add.sprite(4700, 350, 'perso');
+        player = this.physics.add.sprite(400, 350, 'perso');
         player.setGravity(0, 1000);
         player.setSize(30,45)
         player.setOffset(10,25)
@@ -393,7 +380,7 @@ class Level extends Phaser.Scene{
         mana = 4
         sensperso = 0
         regenboss = false
-        compteurcle  = 3
+        compteurcle  = 0
         comptPot = 0
         vieboss = 3
         etatpause = false
@@ -406,27 +393,56 @@ class Level extends Phaser.Scene{
         dialoguepasse2 = false
         dialogue3affiche = false
 
-        // Premier dialogue
+        // Dialogue
+
+        dialoguepasse = 0
+        dialoguepasse2 = 0
+        dialogue1 = this.add.image(448,360,'dialogue1').setInteractive({ cursor: 'pointer' })
+        dialogue1.setDepth(10)
+        dialogue1.setScrollFactor(0)
+        dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
+        dialogue2.setDepth(10)
+        dialogue2.setScrollFactor(0)
+        dialogue3 = this.add.image(448,360,'dialogue3').setInteractive({ cursor: 'pointer' })
+        dialogue3.setDepth(10)
+        dialogue3.setScrollFactor(0)
+        dialogue4 = this.add.image(448,360,'dialogue4').setInteractive({ cursor: 'pointer' })
+        dialogue4.setDepth(10)
+        dialogue4.setScrollFactor(0)
+        dialogue2.visible = false;
+        dialogue3.visible = false;
+        dialogue4.visible = false;
+
         if (dialoguepasse != 1){
-            dialogue1 = this.add.image(448,360,'dialogue1').setInteractive({ cursor: 'pointer' })
-            dialogue1.setDepth(10)
-            dialogue1.setScrollFactor(0)
             etatdialogue1 = true
             etatpausedialogue = true
-            dialogue2 = 0
             dialogue2affiche = false
+        }
+
+        // Load Musics
+
+        musiquelevel = this.sound.add('musiquelevel')
+        var musicConfiglevel = {
+            mute : false,
+            volume : 0.1,
+            rate : 1,
+            loop : true,
+        }
+        if (!etatmusiquelevel){
+            musiquelevel.play(musicConfiglevel)
+            etatmusiquelevel = true;
         }
 
         /*Animations*/
 
         this.anims.create({
             key: 'bossinvu',
-            frames: [ { key: 'boss', frame: 1} ],
+            frames: [ { key: 'boss', frame: 2} ],
             framerate : 10
         });
         this.anims.create({
             key: 'bossvulné',
-            frames: [ { key: 'boss', frame: 2} ],
+            frames: [ { key: 'boss', frame: 1} ],
             framerate : 10
         });
 
@@ -557,7 +573,7 @@ class Level extends Phaser.Scene{
                 if (vieboss == 0){
                     boss.destroy();
                     bossexist = false;
-                    this.musiquelevel.stop()
+                    musiquelevel.stop()
                     etatmusiquelevel = false
                     this.scene.start("scenemenu");
                 }
@@ -633,7 +649,6 @@ class Level extends Phaser.Scene{
 
         /*Lancement des timers*/
         timertourelle++
-        timerinvuboss++
 
         // Game Over
 
@@ -947,28 +962,31 @@ class Level extends Phaser.Scene{
 
         /*Boss*/
 
-        if(player.x >= 4900 && checkpointreached == false){
+        if(player.x >= 5000 && checkpointreached == false){
             checkpointreached = true
         }
-        if(dialoguepasse2 == true){
-            timerboss++
+        if (checkpointreached == true){
             this.cameras.main.pan(5400, 0, 3000, 'Power2');
-            this.musiqueboss = this.sound.add('musiqueboss')
-            var musicConfigboss = {
-                mute : true,
-                volume : 0.1,
-                rate : 1,
-                loop : true,
-            }
-            this.musiquelevel.stop()
+            musiquelevel.mute = true
             if(!etatmusiqueboss){
-                this.musiqueboss.play(musicConfigboss)
+                musiqueboss = this.sound.add('musiqueboss')
+                var musicConfigboss = {
+                    mute : false,
+                    volume : 0.1,
+                    rate : 1,
+                    loop : true,
+                }
+                musiqueboss.play(musicConfigboss)
                 etatmusiqueboss = true
             }
         }
+        if(dialoguepasse2 == true){
+            timerinvuboss++
+            timerboss++
+        }
 
         if (vieboss == 0){
-            this.musiqueboss.stop()
+            musiqueboss.mute = true
             etatmusiqueboss = false
         }
 
@@ -1112,8 +1130,12 @@ class Level extends Phaser.Scene{
             });
     
             mainmenu.on('pointerdown', function(){
-                this.musiquelevel.stop()
+                musiquelevel.mute = true
                 etatmusiquelevel = false
+                if (checkpointreached == true){
+                    musiqueboss.mute = true
+                    etatmusiqueboss = false
+                }
                 this.scene.start("scenemenu");
             }, this);
         }
@@ -1136,9 +1158,7 @@ class Level extends Phaser.Scene{
 
         if (etatdialogue2 == true){
             if (dialogue2affiche == false){
-                dialogue2 = this.add.image(448,360,'dialogue2').setInteractive({ cursor: 'pointer' })
-                dialogue2.setDepth(10)
-                dialogue2.setScrollFactor(0)
+                dialogue2.visible = true;
                 dialogue2affiche = true
             }
             timerclic++
@@ -1161,18 +1181,53 @@ class Level extends Phaser.Scene{
 
 
         if (checkpointreached == true && dialoguepasse2 == false){
+            player.anims.stop(null, true)
+            boss.anims.stop(null, true)
+            etatpausedialogue = true
             if (dialogue3affiche == false){
-                console.log(this)
-                dialogue3 = this.add.image(448,360,'dialogue3').setInteractive({ cursor: 'pointer' })
-                dialogue3.setDepth(10)
-                dialogue3.setScrollFactor(0)
+                timerclic = 0
+                dialogue3.visible = true;
                 dialogue3affiche = true
                 etatdialogue3 = true
             }
-            etatdialogue3 = true
-            etatpausedialogue = true
-            dialogue4 = 0
-            dialogue4affiche = false
+            timerclic++
+            if (passer && timerclic >= 30){
+                etatdialogue3 = false
+                dialogue3.destroy();
+                etatdialogue4 = true
+            }
+            if (timerclic >= 30){
+                dialogue3.on('pointerdown', function(){
+                    etatdialogue3 = false
+                    dialogue3.destroy();
+                    etatdialogue4 = true
+                });
+            }
+
+
+            if (etatdialogue4 == true){
+                if (dialogue4affiche != true){
+                    timerclic = 0
+                    dialogue4.visible = true;
+                    dialogue4affiche = true
+                }
+                timerclic++
+                if (passer && timerclic >= 30){
+                    etatdialogue4 = false
+                    dialogue4.destroy();
+                    dialoguepasse2 = true
+                }
+                if (timerclic >= 30){
+                    dialogue4.on('pointerdown', function(){
+                        etatdialogue4 = false
+                        dialogue4.destroy();
+                        dialoguepasse2 = true
+                    });
+                }
+            } 
+        }
+        else if (dialoguepasse2 == true){
+            etatpausedialogue = false
         }
 
         // Arret physique lorsque pause et dialogue
